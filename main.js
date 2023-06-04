@@ -16,7 +16,7 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 resetCamera()
 document.body.appendChild(renderer.domElement);
- 
+
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
@@ -39,30 +39,23 @@ addGui()
 function addRepere() {
     /*     const axesHelper = new THREE.AxesHelper(5);
         scene.add(axesHelper); */
-    let repere_scale = 3
-    for (let second = 0; second < 60; second++) {
-        let geo = { x: 0.01, y: 0.01, z: 0.01 }
-        if (second == 0) {
-            geo = { x: 0.01, y: 0.5, z: 0.01 }
-        } else
-            if (second % 5 == 0) {
-                geo = { x: 0.01, y: 0.1, z: 0.01 }
-            }
 
 
-        const geometry = new THREE.BoxGeometry(geo.x, geo.y, geo.z);
-        const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-        const second_mark = new THREE.Mesh(geometry, material);
-        // tour complet = 2pi -> 1 seconde = 2pi/60 = pi/30 -> + rotatiojn anti horaire d'un quart de tour ( + Pi /2)
-        let angle = second * Math.PI / 30 - Math.PI / 2 //(2PI /60)
-        let x = Math.cos(angle)
-        let y = - Math.sin(angle)
-        let z = Math.trunc(second / 60)
-        second_mark.position.set(x, y, z)
-        second_mark.userData.type = "repere"
-        second_mark.name = "second_" + second
-        scene.add(second_mark);
-    }
+    repere({ type: "seconde",  start: 0, number: 60, step: 5, color: 0xffff00, z_offset: 0 })
+    repere({ type: "minute",  start: 0, number: 60, step: 5, color: 0x00ffff, z_offset: 1 })
+    repere({ type: "heure",  start: 0, number: 24, step: 3, color: 0x00ff00, z_offset: 2 })
+    repere({ type: "jour",  start: 1, number: 7, step: 1, color: 0xffff00, z_offset: 3 })
+    repere({ type: "semaine",  start: 0, number: 4, step: 1, color: 0x00ffff, z_offset: 4 })
+    repere({ type: "mois",  start: 0, number: 12, step: 1, color: 0x00ff00, z_offset: 5 })
+
+    repere({ type: "annee",  start: 0, number: 10, step: 1, color: 0xffff00, z_offset: 6 })
+    repere({ type: "decenie",  start: 0, number: 10, step: 1, color: 0x00ffff, z_offset: 7 })
+    repere({ type: "siècle",  start: 0, number: 10, step: 1, color: 0x00ff00, z_offset: 8 })
+    repere({ type: "millénaire",  start: 0, number: 10, step: 1, color: 0xffff00, z_offset: 9 })
+
+
+
+
 
     // start of the animation
     const start_geometry = new THREE.BoxGeometry(.05, .05, .04);
@@ -114,10 +107,11 @@ function addCubes() {
         const cube = new THREE.Mesh(geometry, cube_material);
         cube.name = "cube_" + i // donner un nom unique
         cube.userData.type = "cube" // créer un type perso pour les retrouver plus facilement
-        let angle = i * (Math.PI * 2 / cube_per_spire)
-        let x = radius * Math.cos(angle)
+      let angle = i * (Math.PI * 2 / cube_per_spire)
+      //  spirale basique
+        /*   let x = radius * Math.cos(angle)
         let y = i * spire_height
-        let z = radius * Math.sin(angle)
+        let z = radius * Math.sin(angle) */
 
         // test hyperbolic
         // https://mathworld.wolfram.com/HyperbolicHelicoid.html
@@ -126,9 +120,9 @@ function addCubes() {
         let u = i / 100
         let v = angle
         let denominateur = (1 + Math.cosh(u) * Math.cosh(v))
-        x = radius * (Math.sinh(v) * Math.cos(tau * u)) / denominateur
-        y = radius * (Math.sinh(v) * Math.sin(tau * u)) / denominateur
-        z = -radius * (Math.cosh(v) * Math.sinh(u)) / denominateur
+        let x = radius * (Math.sinh(v) * Math.cos(tau * u)) / denominateur +3 // decalage temporaire pour construire l'horloge
+        let y = radius * (Math.sinh(v) * Math.sin(tau * u)) / denominateur
+        let z = -radius * (Math.cosh(v) * Math.sinh(u)) / denominateur
         cube.scale.set(2, 1 - i / cube_number, 2);
         cube.position.set(x, y, z)
         scene.add(cube);
@@ -231,8 +225,8 @@ function addGui() {
     const gui = new GUI()
     let parameters = {
         resetCam: function () { resetCamera(); },
-      //  preset1: function () { preset01(); },
-      //  graphFunc: function () { createGraph(); },
+        //  preset1: function () { preset01(); },
+        //  graphFunc: function () { createGraph(); },
     };
     /*const cubeFolder = gui.addFolder('Cube')
     cubeFolder.add(cube.rotation, 'x', 0, Math.PI * 2)
@@ -249,34 +243,64 @@ function addGui() {
 
 
 
-function resetCamera(){
+function resetCamera() {
     console.log("n'est pas suffisant")
-//https://jsbin.com/wahikuluba/edit?html,output
-// CAMERA
+    //https://jsbin.com/wahikuluba/edit?html,output
+    // CAMERA
 
-var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+    var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR=10000; //NEAR = 0.1, FAR = 20000;
 
 
-camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
-//camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-camera.position.set(0, 0, 3);
-camera.lookAt(0, 0, 0)
-camera.updateProjectionMatrix();
-scene.add(camera);
-controls = new OrbitControls(camera, renderer.domElement);
-//camera.position.set(0, 0, 3); // camera.position.set(60, 0, 0);
-/*
-camera.position.set( 2*xMax, 0.5*yMax, 4*zMax);
+    camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+    //camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+    camera.position.set(0, 0, 3);
+    camera.lookAt(0, 0, 0)
+    camera.updateProjectionMatrix();
+    scene.add(camera);
+    controls = new OrbitControls(camera, renderer.domElement);
+    //camera.position.set(0, 0, 3); // camera.position.set(60, 0, 0);
+    /*
+    camera.position.set( 2*xMax, 0.5*yMax, 4*zMax);
+    
+    camera.up = new THREE.Vector3( 0, 0, 1 );
+    
+    camera.lookAt(scene.position);
+    
+    scene.add(camera);
+    
+    controls = new THREE.TrackballControls( camera, renderer.domElement );
+    
+    THREEx.WindowResize(renderer, camera); */
 
-camera.up = new THREE.Vector3( 0, 0, 1 );
 
-camera.lookAt(scene.position);
+}
 
-scene.add(camera);
+function repere(p) {
+    // let repere_scale = 3
 
-controls = new THREE.TrackballControls( camera, renderer.domElement );
+    for (let rep = p.start; rep < p.number; rep++) {
+        let geo = { x: 0.02, y: 0.01, z: 0.02 }
+        if (rep == p.start) {
+            geo = { x: 0.02, y: 0.5, z: 0.02 }
+        } else
+            if (rep % p.step == 0) {
+                geo = { x: 0.02, y: 0.1, z: 0.02 }
+            }
+        const rep_geometry = new THREE.BoxGeometry(geo.x, geo.y, geo.z);
+        const rep_material = new THREE.MeshBasicMaterial({ color: p.color });
+        const rep_mark = new THREE.Mesh(rep_geometry, rep_material);
+        // tour complet = 2pi -> 1 seconde = 2pi/60 = pi/30 -> + rotatiojn anti horaire d'un quart de tour ( + Pi /2)
+        let angle = rep * 2*Math.PI / p.number - Math.PI / 2 //(2PI /60)
+        let x = Math.cos(angle)
+        let y = - Math.sin(angle)
+        let z = p.z_offset //0//Math.trunc(rep / p.number)
+        rep_mark.position.set(x, y, z)
+        rep_mark.userData.type = p.type
+        rep_mark.name = p.type+"_" + rep
+        scene.add(rep_mark);
+    }
 
-THREEx.WindowResize(renderer, camera); */
+
 
 
 }
