@@ -39,7 +39,8 @@ npx vite
 - https://threejs.org/docs/#manual/en/introduction/Creating-a-scene
 
 `main.js`
-````
+
+```
 import * as THREE from 'three';
 
 const scene = new THREE.Scene();
@@ -66,6 +67,7 @@ function animate() {
 }
 
 animate();
+
 ```
 
 # (optionnel) publier votre projet sur github
@@ -78,17 +80,22 @@ animate();
  - suivez les indications de l'encart "... or push an existing repository from the command line"
 
 exemple à adapter selon votre nom d'utilisateur et le nom de votre dépot
+
  ```
 git remote add origin https://github.com/scenaristeur/spirale.git
 git branch -M main
 git push -u origin main
 ```
+
 - la dernière commande nous donne un message d'erreur. C'est normal, avant de pousser nos fichiers vers github, nous devons d'abord les ajouteret les commiter. cela se fait avec les commandes
+
 ```
 git add .
 git commit -m "initialisation"
 ```
+
 et on peut alors reprendre la commande 
+
 ```
 git push -u origin main
 ```
