@@ -15,9 +15,9 @@ const pointer = new THREE.Vector2();
 let current = null
 
 scene.add(new THREE.AmbientLight(0xcccccc));
-const cube_number = 100
+const cube_number = 1000
 const radius = 3
-const cube_per_spire = 50
+const cube_per_spire = 5
 const spire_height = 0.2
 
 
@@ -26,7 +26,7 @@ addCubes()
 
 function addCubes() {
     for (let i = 0; i < cube_number; i++) {
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const geometry = new THREE.BoxGeometry(.1, .1, .1);
         const cube_material = new THREE.MeshPhysicalMaterial(
             {
                 color: 0x049ef4,
@@ -45,6 +45,18 @@ function addCubes() {
         let x = radius * Math.cos(angle)
         let y = i * spire_height
         let z = radius * Math.sin(angle)
+
+// test hyperbolic
+// https://mathworld.wolfram.com/HyperbolicHelicoid.html
+// https://github.com/scenaristeur/helyfe/blob/main/sketch.js
+let tau = 5 //(torsion)
+let u = i/100
+let v = 1
+let denominateur = (1+Math.cosh(u)*Math.cosh(v))	
+x	=	radius *(Math.sinh(v)*Math.cos(tau*u))/ denominateur
+y	=	radius *(Math.sinh(v)*Math.sin(tau*u))/denominateur	
+z	=	radius *(Math.cosh(v)*Math.sinh(u))/denominateur
+
         cube.position.set(x, y, z)
         scene.add(cube);
     }
