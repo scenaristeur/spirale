@@ -504,10 +504,24 @@ animate();
 
 ```
 
-# publier ta page gratuitement sur github
+# publier ta page gratuitement sur github (si tu as pris cette option)
+- pour publier sur github, on a besoin de préciser au projet dans quel sous dossier il se trouve. Pour ce faire, on créé un fichier vite.config.js contenant. ATTENTION : pense à modifier `/spirale/` par le nom de ton projet.
+
+```
+const publicPath = process.env.NODE_ENV === 'production' ? '/spirale/' : '/'
+export default {
+    // config options
+    base: publicPath,
+  }
+```
+
 - build ```npx vite build``` --> creation d'un dossier `/dist` avec un index.html et ton javascript compressé et je commit et pousse mes changements (les 3 étapes en une ligne !)
 `git add . && git commit -m "creation du build" && git push`
 - ensuite, je reprends ma formule magique https://github.com/scenaristeur/solid-vue-panes/tree/master#make-a-gh-pages-branches pour créer une sous branche avec ce dossier "/dist" : `git subtree push --prefix dist origin gh-pages`
--  
+
+
+![click cube](/doc/8%20-%20creation%20gh-page.png)
+
+- sur github, tu devrais maintenant voir deux branches (cherche "main" si tu ne trouves pas ;-) ) . Pour terminer la publication, dans l'onglet "Settings", choisis dans le menu de gauche "Pages", 
 
 
