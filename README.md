@@ -305,7 +305,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-camera.position.set(0, 20, 100);
+camera.position.set(60, 0, 0);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -374,13 +374,19 @@ function onPointerMove(event) {
 }
 function onClick(event) {
     current != null ? console.log("object clicked", current.object.name, current.object) : ""
+    console.log(camera) // utile pour récupérer la position de la camera
 }
 
 window.addEventListener('pointermove', onPointerMove);
 window.addEventListener('click', onClick);
+window.addEventListener( 'resize', onWindowResize, false );
 
+function onWindowResize(){
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+}
 animate();
-
 
 
 
