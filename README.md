@@ -1,6 +1,5 @@
 # spirale
 
-![débuter en programmation 3D avec threejs](/doc/1%20-%20d%C3%A9buter%20en%20programmation%203D%20avec%20threejs.png)
 
 - https://threejs.org/docs/index.html#manual/en/introduction/Installation
 - créer index.html et main.js (vide pour l'instant)
@@ -70,6 +69,22 @@ animate();
 
 ```
 
+ET VOILA !
+si vous avez bien tout suivi, vous avez maintenant un cube vert en ED qui tourne
+ !!! c'est pas plus compliqué que ça de faire de la 3D !!!
+
+ essayez de voir à quel endroit dans le code, vous pouvez modifier les propriétés du cube : sa position, sa vitesse de rotation, sa couleur, sa taille...
+
+ 
+![débuter en programmation 3D avec threejs](/doc/1%20-%20d%C3%A9buter%20en%20programmation%203D%20avec%20threejs.png) 
+
+la prochaine étape sera de former une spirale avec des sphères. si vous souhaitez garder/ publier votre projet, gérer ses versions vous pouvez suivre le chapitre optionnel suivant. sinon, passez tout de suite au suivant du suivant ((( !!!! y'a pas un mot pour dire ça, "le suivant du suivant ??? " Jacques Brel... une idée ???? )))
+
+![Au suivant Jacques Brel](https://www.dailymotion.com/embed/video/x68cxw)
+
+
+
+
 # (optionnel) publier votre projet sur github
 
 ![création dépot git](/doc/2%20-%20cr%C3%A9ation%20depot%20git.png)
@@ -119,3 +134,4 @@ on peut alors rafraichir la page github, et constater que notre code est en lign
 
 ![code sur github](/doc/5%20-%20git%20status.png)
 
+# modifier le projet pour enfaire une spirale
