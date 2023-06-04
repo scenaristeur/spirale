@@ -2,26 +2,38 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+camera.position.set(0, 20, 100);
 
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
-const controls = new OrbitControls( camera, renderer.domElement );
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
+
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+let current = null
 
 const cube_number = 100
+const radius = 3
+const cube_per_spire = 50
+const spire_height = 0.2
 
 addCubes()
 
-function addCubes(){
-    for (let i = 0; i<cube_number; i++){
-        const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-        const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-        const cube = new THREE.Mesh( geometry, material );
-        cube.name = "cube_"+i // donner un nom unique
-        cube.userData.type="cube" // créer un type perso pour les retrouver plus facilement
-        cube.position.set(i,i,i)
-        scene.add( cube );
+function addCubes() {
+    for (let i = 0; i < cube_number; i++) {
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        cube.name = "cube_" + i // donner un nom unique
+        cube.userData.type = "cube" // créer un type perso pour les retrouver plus facilement
+        let angle = i * (Math.PI * 2 / cube_per_spire)
+        let x = radius * Math.cos(angle)
+        let y = i * spire_height
+        let z = radius * Math.sin(angle)
+        cube.position.set(x, y, z)
+        scene.add(cube);
     }
     console.log(scene)
 }
@@ -31,17 +43,39 @@ camera.position.z = 5;
 controls.update();
 
 function animate() {
-	requestAnimationFrame( animate );
-
+    requestAnimationFrame(animate);
+    // update the picking ray with the camera and pointer position
+    raycaster.setFromCamera(pointer, camera);
     scene.traverse((child) => {
         if (child.userData.type === "cube") {
             child.rotation.x += 0.01;
             child.rotation.y += 0.01;
+            child.material.color.set(0x00ff00)
         }
-      });
-
-	renderer.render( scene, camera );
+    });
+    // calculate objects intersecting the picking ray
+    const intersects = raycaster.intersectObjects(scene.children);
+    for (let i = 0; i < intersects.length; i++) {
+        //intersecte object in red
+        intersects[i].object.material.color.set(0xff0000);
+       // console.log(intersects[i].object.name)
+    }
+    current = intersects[0] || null
+    renderer.render(scene, camera);
 }
+
+function onPointerMove(event) {
+    // calculate pointer position in normalized device coordinates
+    // (-1 to +1) for both components
+    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+}
+function onClick(event) {
+    current != null ? console.log("object clicked", current.object.name, current.object) : ""
+}
+
+window.addEventListener('pointermove', onPointerMove);
+window.addEventListener('click', onClick);
 
 animate();
 
