@@ -66,4 +66,33 @@ function animate() {
 animate();
 ```
 
+# (optionnel) publier votre projet sur github
 - ajouter un fichier .gitignore avec juste "node_modules" si vous souhaitez utiliser git comme gestionnaire de version
+ - git init
+ - sur github créez un nouveau dépôt avec le même nom que votre dossier, laissez coché "Public" et ne modifiez aucune autre option (n'initialisez pas le projet avec le README, le gitignore ou la license, sinon, vous ne pourrez pas profiter des indications de la prochaine étape)
+ - suivez les indications de l'encart "... or push an existing repository from the command line"
+
+exemple à adapter selon votre nom d'utilisateur et le nom de votre dépot
+ ```
+ git remote add origin https://github.com/scenaristeur/spirale.git
+git branch -M main
+git push -u origin main
+```
+- la dernière commande nous donne un message d'erreur. C'est normal, avant de pousser nos fichiers vers github, nous devons d'abord les ajouteret les commiter. cela se fait avec les commandes
+```
+git add .
+git commit -m "initialisation"
+```
+et on peut alors reprendre la commande 
+```
+git push -u origin main
+```
+A chaque fois que vous aurez fait des modifications et que vous voudrez les publiez, reproduisez ces trois étapes en mmodifiant dans le commit "Initialisation" par un texte décrivant la nature du changement, comme par exemple 
+
+```
+git add .
+git commit -m "imise à jour du fichier de documentation"
+git push
+```
+
+
