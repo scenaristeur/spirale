@@ -520,8 +520,70 @@ export default {
 - ensuite, je reprends ma formule magique https://github.com/scenaristeur/solid-vue-panes/tree/master#make-a-gh-pages-branches pour créer une sous branche avec ce dossier "/dist" : `git subtree push --prefix dist origin gh-pages`
 
 
-![click cube](/doc/8%20-%20creation%20gh-page.png)
+![creation gh-pages](/doc/8%20-%20creation%20gh-page.png)
 
 - sur github, tu devrais maintenant voir deux branches (cherche "main" si tu ne trouves pas ;-) ) . Pour terminer la publication, dans l'onglet "Settings", choisis dans le menu de gauche "Pages", 
+
+![settings](/doc/9%20-%20settings.png)
+
+et voilà, ton visuel 3D est en ligne, le mien est à cette adresse : https://scenaristeur.github.io/spirale/ 
+![online](/doc/10%20-%20online.png)
+
+tu peux copier son adresse et la mettre dans "About" à droite sur la page d'accueil de ton projet sur github pour qu'il soit plus facilement accessible.
+
+![settings](/doc/9%20-%20settings.png)
+
+# facilter la publication
+- pour faciliter la publication, tu peux créer des scripts dans package.json : 
+
+en dessous de tests : 
+```
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  ```
+ajoute les lignes.
+```
+    "git": "npx vite build && git add . && git commit -m",
+    "postgit": "git push && git subtree push --prefix dist origin gh-pages"
+```
+
+Attention, n'oublie pas la virgule à la fin de la ligne commençant par "test". ça nous donne donc pour package.json: 
+```
+{
+  "name": "spirale",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "git": "npx vite build && git add . && git commit -m",
+    "postgit": "git push && git subtree push --prefix dist origin gh-pages"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "three": "^0.153.0"
+  },
+  "devDependencies": {
+    "vite": "^4.3.9"
+  }
+}
+
+```
+
+ceci te rajoute une nouvelle commande qui permet la publication, elle s'utilise de la manière suivante :
+ `npm run git -m "modification du package.json" `
+
+ le `-m "message de commit" ` est à adapter à chaque fois, mais c'est plus simple que build, add, commit, push ...
+
+
+
+
+
+
+
+
 
 
