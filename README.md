@@ -533,7 +533,11 @@ tu peux copier son adresse et la mettre dans "About" à droite sur la page d'acc
 
 ![settings](/doc/9%20-%20settings.png)
 
-# facilter la publication
+# facilter la publication (Broken)
+!! ne semble pas fonctionner avec vite !!! -> une autre solution à tester :
+ https://vitejs.dev/guide/static-deploy.html#github-pages
+
+
 - pour faciliter la publication, tu peux créer des scripts dans package.json : 
 
 en dessous de tests : 
