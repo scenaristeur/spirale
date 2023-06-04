@@ -503,3 +503,11 @@ function onWindowResize() {
 animate();
 
 ```
+
+# publier ta page gratuitement sur github
+- build ```npx vite build``` --> creation d'un dossier `/dist` avec un index.html et ton javascript compressé et je commit et pousse mes changements (les 3 étapes en une ligne !)
+`git add . && git commit -m "creation du build" && git push`
+- ensuite, je reprends ma formule magique https://github.com/scenaristeur/solid-vue-panes/tree/master#make-a-gh-pages-branches pour créer une sous branche avec ce dossier "/dist" : `git subtree push --prefix dist origin gh-pages`
+-  
+
+
