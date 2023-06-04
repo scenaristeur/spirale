@@ -1,7 +1,10 @@
 # spirale
+Alors, tu veux developper des jeux en 3D, mais ça parait compliqué? Non, t'inquiète, on va démarrer doucement en utilisant THREE.
 
+juste quelques notions de javascript te seroint nécessaires, et un peu de patience, de persévérence, et installer nodejs https://nodejs.org/fr/download
 
-- https://threejs.org/docs/index.html#manual/en/introduction/Installation
+On va commencer par installer THREE, créer une page html, et le script qui permet de créer une scène puis une basic cube vert qui tourne en commençant par les instructions d'installation https://threejs.org/docs/index.html#manual/en/introduction/Installation
+
 - créer index.html et main.js (vide pour l'instant)
 
 `index.html`
