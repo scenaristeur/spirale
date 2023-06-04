@@ -14,10 +14,10 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 let current = null
 
-scene.add(new THREE.AmbientLight(0xcccccc));
+
 const cube_number = 1000
 const radius = 3
-const cube_per_spire = 5
+const cube_per_spire = 50
 const spire_height = 0.2
 
 
@@ -27,7 +27,7 @@ addCubes()
 function addCubes() {
     for (let i = 0; i < cube_number; i++) {
         const geometry = new THREE.BoxGeometry(.1, .1, .1);
-        const cube_material = new THREE.MeshPhysicalMaterial(
+     /*    const cube_material = new THREE.MeshPhysicalMaterial(
             {
                 color: 0x049ef4,
                 emissive: 0x00bb00,
@@ -37,7 +37,21 @@ function addCubes() {
                 clearcoat: 0,
                 clearcoatNormalScale: 0,
                 fog: true
-            });
+            }); */
+            const cube_material = new THREE.MeshPhysicalMaterial({
+                //color: 0xcc0000,
+                emissive: 0x26a269,
+                color: 0x00ff00, // decalage > 0 ? 0x00ff00 : 0x0000ff,
+                roughness: 0,
+                metalness: 0.5,
+                reflectivity: 0.5,
+                clearcoat: 1,
+                clearcoatRoughness: 0.4,
+                flatShading: true,
+                side: THREE.DoubleSide,
+                //fog: true,
+                //wireframe: true
+              });
         const cube = new THREE.Mesh(geometry, cube_material);
         cube.name = "cube_" + i // donner un nom unique
         cube.userData.type = "cube" // créer un type perso pour les retrouver plus facilement
@@ -46,17 +60,17 @@ function addCubes() {
         let y = i * spire_height
         let z = radius * Math.sin(angle)
 
-// test hyperbolic
-// https://mathworld.wolfram.com/HyperbolicHelicoid.html
-// https://github.com/scenaristeur/helyfe/blob/main/sketch.js
-let tau = 5 //(torsion)
-let u = i/100
-let v = 1
-let denominateur = (1+Math.cosh(u)*Math.cosh(v))	
-x	=	radius *(Math.sinh(v)*Math.cos(tau*u))/ denominateur
-y	=	radius *(Math.sinh(v)*Math.sin(tau*u))/denominateur	
-z	=	radius *(Math.cosh(v)*Math.sinh(u))/denominateur
-
+        // test hyperbolic
+        // https://mathworld.wolfram.com/HyperbolicHelicoid.html
+        // https://github.com/scenaristeur/helyfe/blob/main/sketch.js
+        let tau = 5 //(torsion)
+        let u = i/100
+        let v = angle
+        let denominateur = (1+Math.cosh(u)*Math.cosh(v))	
+        x	=	radius *(Math.sinh(v)*Math.cos(tau*u))/ denominateur
+        y	=	radius *(Math.sinh(v)*Math.sin(tau*u))/denominateur	
+        z	=	radius *(Math.cosh(v)*Math.sinh(u))/denominateur
+        cube.scale.set( 2, 1-i/cube_number, 2 );
         cube.position.set(x, y, z)
         scene.add(cube);
     }
@@ -88,6 +102,23 @@ function animate() {
     current = intersects[0] || null
     renderer.render(scene, camera);
 }
+
+scene.add(new THREE.AmbientLight(0xcccccc));
+
+let light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.x = 1;
+light.position.x = 0;
+light.position.x = 1;
+light.castShadow = true;
+light.shadow.mapSize.width = 2048;
+light.shadow.mapSize.height = 2048;
+light.shadow.camera.right = 2;
+light.shadow.camera.left = -2;
+light.shadow.camera.top = 2;
+light.shadow.camera.bottom = -2;
+//light.shadow.bias = 0.00001
+
+scene.add(light);
 
 function onPointerMove(event) {
     // calculate pointer position in normalized device coordinates
