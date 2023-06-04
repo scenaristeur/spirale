@@ -1,14 +1,22 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GUI } from 'dat.gui'
+
+
+var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-camera.position.set(0, 0, 3); // camera.position.set(60, 0, 0);
+let camera
+let controls
+
+
+
 
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+resetCamera()
 document.body.appendChild(renderer.domElement);
-const controls = new OrbitControls(camera, renderer.domElement);
+ 
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
@@ -26,16 +34,27 @@ const spire_height = 0.2
 addCubes()
 addRepere()
 addLights()
+addGui()
 
 function addRepere() {
     /*     const axesHelper = new THREE.AxesHelper(5);
         scene.add(axesHelper); */
     let repere_scale = 3
     for (let second = 0; second < 60; second++) {
-        const geometry = new THREE.BoxGeometry(.01, .01, .01);
+        let geo = { x: 0.01, y: 0.01, z: 0.01 }
+        if (second == 0) {
+            geo = { x: 0.01, y: 0.5, z: 0.01 }
+        } else
+            if (second % 5 == 0) {
+                geo = { x: 0.01, y: 0.1, z: 0.01 }
+            }
+
+
+        const geometry = new THREE.BoxGeometry(geo.x, geo.y, geo.z);
         const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
         const second_mark = new THREE.Mesh(geometry, material);
-        let angle = second * Math.PI / 30 //(2PI /60)
+        // tour complet = 2pi -> 1 seconde = 2pi/60 = pi/30 -> + rotatiojn anti horaire d'un quart de tour ( + Pi /2)
+        let angle = second * Math.PI / 30 - Math.PI / 2 //(2PI /60)
         let x = Math.cos(angle)
         let y = - Math.sin(angle)
         let z = Math.trunc(second / 60)
@@ -51,7 +70,7 @@ function addRepere() {
     start_repere = new THREE.Mesh(start_geometry, start_material);
     start_repere.userData.type = "start"
     start_repere.name = "start"
-   // start_repere.position.set(-1, 1, 1)
+    // start_repere.position.set(-1, 1, 1)
     scene.add(start_repere)
 
     const now_geometry = new THREE.BoxGeometry(.04, .05, .05);
@@ -145,14 +164,18 @@ function animate(time) {
 
 
     });
-    let angle_start = - start * Math.PI / 30 
+    // tour complet = 2pi -> 1 seconde = 2pi/60 = pi/30 -> + rotatiojn anti horaire d'un quart de tour ( + Pi /2)
+
+    let angle_start = - start * Math.PI / 30 + Math.PI / 2
     let x_start = Math.cos(angle_start)
     let y_start = Math.sin(angle_start)
     //let z = Math.trunc(second / 60) */
     start_repere.position.x = x_start
     start_repere.position.y = y_start
 
-    let angle_now = - now * Math.PI / 30 
+    // tour complet = 2pi -> 1 seconde = 2pi/60 = pi/30 -> + rotatiojn anti horaire d'un quart de tour ( + Pi /2)
+
+    let angle_now = - now * Math.PI / 30 + Math.PI / 2
     let x_now = Math.cos(angle_now)
     let y_now = Math.sin(angle_now)
     /* let y = Math.sin(angle)
@@ -165,7 +188,7 @@ function animate(time) {
     for (let i = 0; i < intersects.length; i++) {
 
         intersects[i].object.userData.type == "cube" ? intersects[i].object.material.color.set(0xff0000) : ""
-       // console.log(intersects[i].object.name)
+        // console.log(intersects[i].object.name)
     }
     current = intersects[0] || null
     /*  if(current != null)
@@ -201,7 +224,63 @@ function onPointerMove(event) {
 function onClick(event) {
     current != null ? console.log("object clicked", current.object.name, current.object) : ""
     //  console.log(camera) // utile pour récupérer la position de la camera
+
 }
+
+function addGui() {
+    const gui = new GUI()
+    let parameters = {
+        resetCam: function () { resetCamera(); },
+      //  preset1: function () { preset01(); },
+      //  graphFunc: function () { createGraph(); },
+    };
+    /*const cubeFolder = gui.addFolder('Cube')
+    cubeFolder.add(cube.rotation, 'x', 0, Math.PI * 2)
+    cubeFolder.add(cube.rotation, 'y', 0, Math.PI * 2)
+    cubeFolder.add(cube.rotation, 'z', 0, Math.PI * 2)
+    cubeFolder.open()*/
+    const cameraFolder = gui.addFolder('Camera')
+
+
+    cameraFolder.add(parameters, 'resetCam').name("Reset Camera");
+    // cameraFolder.add(camera.position, 'z', 0, 10)
+    cameraFolder.open()/*  */
+}
+
+
+
+function resetCamera(){
+    console.log("n'est pas suffisant")
+//https://jsbin.com/wahikuluba/edit?html,output
+// CAMERA
+
+var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+
+
+camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+//camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+camera.position.set(0, 0, 3);
+camera.lookAt(0, 0, 0)
+camera.updateProjectionMatrix();
+scene.add(camera);
+controls = new OrbitControls(camera, renderer.domElement);
+//camera.position.set(0, 0, 3); // camera.position.set(60, 0, 0);
+/*
+camera.position.set( 2*xMax, 0.5*yMax, 4*zMax);
+
+camera.up = new THREE.Vector3( 0, 0, 1 );
+
+camera.lookAt(scene.position);
+
+scene.add(camera);
+
+controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+THREEx.WindowResize(renderer, camera); */
+
+
+}
+
 
 window.addEventListener('pointermove', onPointerMove);
 window.addEventListener('click', onClick);
