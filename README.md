@@ -128,12 +128,12 @@ git commit -m "mise à jour du fichier de documentation"
 git push
 ```
 
-- tu peux alors rafraichir la page github, et constater que notre code est en ligne. Attention, à ne pas y mettre d'information confidentielle, comme les mots de passe !
+- tu peux alors rafraichir la page github, et constater que ton code est en ligne. Attention, à ne pas y mettre d'information confidentielle, comme les mots de passe !
 
 ![code sur github](/doc/4%20-%20code%20sur%20github.png)
 
 
-- en cas de doute pour les commandes git, `git status` peut vous indiquer les fichiers modifiés, ceux qui sont à committer ...
+- en cas de doute pour les commandes git, `git status` peut t'indiquer les fichiers modifiés, ceux qui sont à committer ...
 
 ![code sur github](/doc/5%20-%20git%20status.png)
 
