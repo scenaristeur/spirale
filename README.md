@@ -78,11 +78,7 @@ si vous avez bien tout suivi, vous avez maintenant un cube vert en ED qui tourne
  
 ![débuter en programmation 3D avec threejs](/doc/1%20-%20d%C3%A9buter%20en%20programmation%203D%20avec%20threejs.png) 
 
-la prochaine étape sera de former une spirale avec des sphères. si vous souhaitez garder/ publier votre projet, gérer ses versions vous pouvez suivre le chapitre optionnel suivant. sinon, passez tout de suite au suivant du suivant ((( !!!! y'a pas un mot pour dire ça, "le suivant du suivant ??? " Jacques Brel... une idée ???? )))
-
-![Au suivant Jacques Brel](https://www.dailymotion.com/embed/video/x68cxw)
-
-
+la prochaine étape sera de former une spirale avec des sphères. si vous souhaitez garder/ publier votre projet, gérer ses versions vous pouvez suivre le chapitre optionnel suivant. sinon, passez tout de suite au suivant du suivant ((( !!!! y'a pas un mot pour dire ça, "le suivant du suivant ??? " Jacques Brel... une idée ???? https://www.dailymotion.com/video/x68cxw )))
 
 
 # (optionnel) publier votre projet sur github
