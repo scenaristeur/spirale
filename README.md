@@ -82,7 +82,8 @@ si tu as bien tout suivi, tu as maintenant un cube vert en 3D qui tourne
 ![débuter en programmation 3D avec threejs](/doc/1%20-%20d%C3%A9buter%20en%20programmation%203D%20avec%20threejs.png) 
 
 
-- La prochaine étape sera de former une spirale avec des sphères. si tu souhaites garder/ publier ton projet, gérer ses versions tu peux suivre le chapitre optionnel suivant.
+- Pour la prochaine étape, on tentera d'ajouter quelques cubes et de les organiser en spirale, par exemple.
+- Si tu souhaites garder/ publier ton projet, gérer ses versions tu peux suivre le chapitre optionnel suivant.
 
 - Sinon, passe tout de suite au suivant du suivant ((( !!!! y'a pas un mot pour dire ça, "le suivant du suivant ??? " Jacques Brel... une idée ???? https://www.dailymotion.com/video/x68cxw )))
 
@@ -137,4 +138,60 @@ git push
 
 ![code sur github](/doc/5%20-%20git%20status.png)
 
-# modifier le projet pour enfaire une spirale
+# modifier le projet pour en faire une spirale
+
+- maintenat que l'on a un cube qui tourne, essayons d'en ajouter quelques autres
+- ajout d'une fonction addCubes() qui permet d'ajouter 100 cubes
+- la fonction animation a été modifiée également pour pouvoir les retrouver et ne faire tourner qu'eux (rotation)
+- ajout d'OrbitControl pour permettre de déplacer la caméra
+
+```
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+const controls = new OrbitControls( camera, renderer.domElement );
+
+const cube_number = 100
+
+addCubes()
+
+function addCubes(){
+    for (let i = 0; i<cube_number; i++){
+        const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+        const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+        const cube = new THREE.Mesh( geometry, material );
+        cube.name = "cube_"+i // donner un nom unique
+        cube.userData.type="cube" // créer un type perso pour les retrouver plus facilement
+        cube.position.set(i,i,i)
+        scene.add( cube );
+    }
+    console.log(scene)
+}
+
+camera.position.z = 5;
+//controls.update() must be called after any manual changes to the camera's transform
+controls.update();
+
+function animate() {
+	requestAnimationFrame( animate );
+
+    scene.traverse((child) => {
+        if (child.userData.type === "cube") {
+            child.rotation.x += 0.01;
+            child.rotation.y += 0.01;
+        }
+      });
+
+	renderer.render( scene, camera );
+}
+
+animate();
+```
+
+
