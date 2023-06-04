@@ -14,18 +14,31 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 let current = null
 
+scene.add(new THREE.AmbientLight(0xcccccc));
 const cube_number = 100
 const radius = 3
 const cube_per_spire = 50
 const spire_height = 0.2
+
+
 
 addCubes()
 
 function addCubes() {
     for (let i = 0; i < cube_number; i++) {
         const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const cube = new THREE.Mesh(geometry, material);
+        const cube_material = new THREE.MeshPhysicalMaterial(
+            {
+                color: 0x049ef4,
+                emissive: 0x00bb00,
+                roughness: 1,
+                metalness: 0,
+                reflectivity: 0.5,
+                clearcoat: 0,
+                clearcoatNormalScale: 0,
+                fog: true
+            });
+        const cube = new THREE.Mesh(geometry, cube_material);
         cube.name = "cube_" + i // donner un nom unique
         cube.userData.type = "cube" // créer un type perso pour les retrouver plus facilement
         let angle = i * (Math.PI * 2 / cube_per_spire)
@@ -58,7 +71,7 @@ function animate() {
     for (let i = 0; i < intersects.length; i++) {
         //intersecte object in red
         intersects[i].object.material.color.set(0xff0000);
-       // console.log(intersects[i].object.name)
+        // console.log(intersects[i].object.name)
     }
     current = intersects[0] || null
     renderer.render(scene, camera);
@@ -77,12 +90,12 @@ function onClick(event) {
 
 window.addEventListener('pointermove', onPointerMove);
 window.addEventListener('click', onClick);
-window.addEventListener( 'resize', onWindowResize, false );
+window.addEventListener('resize', onWindowResize, false);
 
-function onWindowResize(){
+function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 animate();
 
