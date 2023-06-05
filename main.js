@@ -345,7 +345,8 @@ function onClick(event) {
 }
 
 function addGui() {
-    const gui = new GUI()
+    const gui = new GUI({/* autoPlace: false,*/ width: 400, useLocalStorage: true})
+    
     let parameters = {
         resetCam: function () { resetCamera(); },
         showPopup: function () { showPopup(); },
