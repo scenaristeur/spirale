@@ -582,7 +582,9 @@ ceci te rajoute une nouvelle commande qui permet la publication, elle s'utilise 
 
  le `-m "message de commit" ` est à adapter à chaque fois, mais c'est plus simple que build, add, commit, push ...
 
+# galerie of minimal surfaces
 
+- http://profs.scienze.univr.it/~baldo/tjs/
 
 
 

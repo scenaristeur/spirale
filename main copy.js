@@ -2,14 +2,27 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { ParametricGeometry } from 'three/examples/jsm/geometries/ParametricGeometry.js';
 import { GUI } from 'dat.gui'
+import * as SceneUtils from 'three/addons/utils/SceneUtils.js';
 
 
 var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+var sin = Math.sin, cos = Math.cos, pi = Math.PI;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x001b42);
 let camera
 let controls
+let params = {
+    resetCam: function () { resetCamera(); },
+    message: "Catenoid-Helicoid Minimal Surface",
+    radius: pi / 2,
+    wireframe: true,
+    facets: true,
+    sfondo: "",
+    magnification: 1000
+    //  preset1: function () { preset01(); },
+    //  graphFunc: function () { createGraph(); },
+};
+let surface
 
 
 
@@ -19,7 +32,9 @@ renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 resetCamera()
 document.body.appendChild(renderer.domElement);
 
-
+/* camera = new THREE.PerspectiveCamera(75, SCREEN_WIDTH / SCREEN_HEIGHT, 100, 45000);
+			camera.position.z = -3200;
+ */
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 let current = null
@@ -34,127 +49,58 @@ const spire_height = 0.2
 
 
 addCubes()
-
 addRepere()
 addLights()
+
+const surfaceMaterials = function (mat) {//prune materials array according to flags
+    if (params.wireframe && params.facets) {
+        return [mat[0], mat[1]];
+    } else if (params.wireframe) {
+        return [mat[1]];
+    } else if (params.facets) {
+        return [mat[0]];
+    } else {
+        return [];
+    }
+}
+
+const updateSurface = function () {//function to initialise and update surf.
+    scene.remove(surface);
+    let surfaceGeom = new ParametricGeometry(catenoid, 20, 40);
+    //const surfaceGeom = new THREE.ParametricGeometry( THREE.ParametricGeometries.klein, 25, 25 );
+    var mat = surfaceMaterials(materials);
+    console.log(mat)
+    if (mat.length > 0) {
+        surface = SceneUtils.createMultiMaterialObject(surfaceGeom, mat);
+        surface.children[0].material.side = THREE.DoubleSide;
+        surface.position.set(0, 0, 0);
+       surface.scale.multiplyScalar(2);
+        surface.matrixAutoUpdate = true;
+        scene.add(surface);
+        console.log(surface)
+    }
+    console.log(surface)
+
+
+    const geometry = new THREE.SphereGeometry( 1, 32, 16 ); 
+const material = new THREE.MeshBasicMaterial( { color: 0xff00ff } ); 
+const sphere = new THREE.Mesh( geometry, material );
+ scene.add( sphere );
+
+ const geometry1 = new THREE.PlaneGeometry( 1, 1 );
+ const material1 = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+ const plane = new THREE.Mesh( geometry1, material1 );
+ scene.add( plane );
+
+
+
+
+}
+
+
+
+
 addGui()
-
-let radius1 = Math.PI / 2
-function catenoid(u, v, target) {
-    //https://en.wikipedia.org/wiki/Helicoid
-    /*var v = (r - .5) * 20;
-    var u = 2 * 5 * Math.PI * t;
-    let a = radius1;
-     let x = Math.cos(a) * Math.sinh(v / 5) * Math.sin(u / 5) + Math.sin(a) * Math.cosh(v / 5) * Math.cos(u / 5);
-    let y = -Math.cos(a) * Math.sinh(v / 5) * Math.cos(u / 5) + Math.sin(a) * Math.cosh(v / 5) * Math.sin(u / 5);
-    let z = u / 5 * Math.cos(a) + v / 5 * Math.sin(a); */
-    /*
-    where ρ and θ range from negative infinity to positive infinity, while α is a constant. If α is positive, then the helicoid is right-handed as shown in the figure; if negative then left-handed. 
-    x=\rho \cos(\alpha \theta ),\ 
-    y = ρ sin ⁡ ( α θ ) ,   y=\rho \sin(\alpha \theta ),\ 
-    z = θ ,   z=\theta ,\ */
-   /*  let a = 4
-    let x = 1 //r * Math.cos(a * t)
-    let y = 1//r * Math.sin(a * t)
-    let z = 1//t */
-   // return new THREE.Vector3(y, z, x);
-   //let alpha = Math.PI * 2 * (u - 0.5); // transformer u en (u-0.5) double
-   let theta = Math.PI * 2 * (v - 0.5); // multiplie le couches (v - 0.5); sympa : (v - 0.1);
-
-let  a = 20
-   // hyperbola
-  // let bottom = 1 + Math.cosh(alpha) * Math.cosh(theta);
-   // selon wolfram // hyperbole
-   let x = u*Math.cos(a * v) //(Math.sinh(theta) * Math.cos(5 * alpha)) / bottom;
-   let z = theta//(Math.sinh(theta) * Math.sin(5 * alpha)) / bottom;
-   let y = u*Math.sin(a * v) //(Math.cosh(theta) * Math.sinh(alpha)) / bottom;
-   target.set(x, y, z);
-}
-
-function catenoid2(u, v, target) {
-    //https://en.wikipedia.org/wiki/Helicoid
-    /*var v = (r - .5) * 20;
-    var u = 2 * 5 * Math.PI * t;
-    let a = radius1;
-     let x = Math.cos(a) * Math.sinh(v / 5) * Math.sin(u / 5) + Math.sin(a) * Math.cosh(v / 5) * Math.cos(u / 5);
-    let y = -Math.cos(a) * Math.sinh(v / 5) * Math.cos(u / 5) + Math.sin(a) * Math.cosh(v / 5) * Math.sin(u / 5);
-    let z = u / 5 * Math.cos(a) + v / 5 * Math.sin(a); */
-    /*
-    where ρ and θ range from negative infinity to positive infinity, while α is a constant. If α is positive, then the helicoid is right-handed as shown in the figure; if negative then left-handed. 
-    x=\rho \cos(\alpha \theta ),\ 
-    y = ρ sin ⁡ ( α θ ) ,   y=\rho \sin(\alpha \theta ),\ 
-    z = θ ,   z=\theta ,\ */
-   /*  let a = 4
-    let x = 1 //r * Math.cos(a * t)
-    let y = 1//r * Math.sin(a * t)
-    let z = 1//t */
-   // return new THREE.Vector3(y, z, x);
-  // let alpha = Math.PI * 2 * (u - 0.5); // transformer u en (u-0.5) double
-   //let theta = Math.PI * 2 * (v - 0.5); // multiplie le couches (v - 0.5); sympa : (v - 0.1);
-
-let  a = 20
-   // hyperbola
-  // let bottom = 1 + Math.cosh(alpha) * Math.cosh(theta);
-   // selon wolfram // hyperbole
-   let x = u*Math.cos(a * v) //(Math.sinh(theta) * Math.cos(5 * alpha)) / bottom;
-
-   let y = u*Math.sin(a * v) //(Math.cosh(theta) * Math.sinh(alpha)) / bottom;
-   let z = v//(Math.sinh(theta) * Math.sin(5 * alpha)) / bottom;
-   target.set(x, y, z);
-}
-
-let material = new THREE.MeshNormalMaterial({side: THREE.DoubleSide,});
-
-function addHelicoid() {
-    console.log("todo")
-    let surfaceGeomHelicoid = new ParametricGeometry(catenoid, 250, 400);
-    let helicoidMesh = new THREE.Mesh(surfaceGeomHelicoid, material);
-   
-    helicoidMesh.position.x = -2
-    helicoidMesh.position.y = -2
-    helicoidMesh.name="helico"
-    scene.add(helicoidMesh)
-    console.log(helicoidMesh)
-}
-
-function addHelicoid2() {
-    console.log("todo")
-    let surfaceGeomHelicoid = new ParametricGeometry(catenoid2, 25, 400);
-    let helicoidMesh = new THREE.Mesh(surfaceGeomHelicoid, material);
-    helicoidMesh.position.x = -2
-    helicoidMesh.position.y = 2
-
-    helicoidMesh.name="helico2"
-    scene.add(helicoidMesh)
-    console.log(helicoidMesh)
-}
-
-function Helicoid(u, v, target) {
-    let alpha = Math.PI * 2 * (u - 0.5); // transformer u en (u-0.5) double
-    let theta = Math.PI * 2 * (v - 0.5); // multiplie le couches (v - 0.5); sympa : (v - 0.1);
-
-
-    // hyperbola
-    let bottom = 1 + Math.cosh(alpha) * Math.cosh(theta);
-    // selon wolfram // hyperbole
-    let x = (Math.sinh(theta) * Math.cos(5 * alpha)) / bottom;
-    let z = (Math.sinh(theta) * Math.sin(5 * alpha)) / bottom;
-    let y = (Math.cosh(theta) * Math.sinh(alpha)) / bottom;
-
-    target.set(x, y, z);
-}
-
-function addHyperbolicHelicoid() {
-    //https://observablehq.com/d/1e9215a708261df3
-    let surfaceGeomParabolicHelicoid = new ParametricGeometry(Helicoid, 360, 254) // new THREE.ParametricGeometry(catenoid, 200, 400);
-    let parabolicHelicoidMesh = new THREE.Mesh(surfaceGeomParabolicHelicoid, material);
-    parabolicHelicoidMesh.position.x = -2
-    scene.add(parabolicHelicoidMesh);
-}
-
-addHelicoid()
-addHelicoid2()
-addHyperbolicHelicoid()
 
 function addRepere() {
     /*     const axesHelper = new THREE.AxesHelper(5);
@@ -250,6 +196,21 @@ function addCubes() {
     console.log(scene)
 }
 
+
+
+
+//Create materials for  Surface
+const materials = [
+    new THREE.MeshPhongMaterial({ color: 0x8f5e67, specular: 0xaa0000, emissive: 0x000000, ambient: 0xae727d, shininess: 10, shading: THREE.SmoothShading }),
+    //new THREE.MeshPhongMaterial( { color: 0x008888, specular: 0xaaaaaa, emissive: 0x000000, ambient: 0x00aaaa, shininess: 10, shading: THREE.SmoothShading} ),
+ /*    new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true, transparent: true, opacity: 0.1 }) */
+    new THREE.MeshBasicMaterial({ color: 0x0ffffff, wireframe: true,  })
+];
+
+//Surface
+updateSurface();
+
+
 camera.position.z = 5;
 //controls.update() must be called after any manual changes to the camera's transform
 controls.update();
@@ -314,16 +275,14 @@ function addLights() {
     scene.add(new THREE.AmbientLight(0xcccccc));
 
     let light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.x = 1;
-    light.position.y = 0;
-    light.position.z = 1;
-    light.castShadow = true;
+    light.position.set(1, 0, 1)
+ /*    light.castShadow = true;
     light.shadow.mapSize.width = 2048;
     light.shadow.mapSize.height = 2048;
     light.shadow.camera.right = 2;
     light.shadow.camera.left = -2;
     light.shadow.camera.top = 2;
-    light.shadow.camera.bottom = -2;
+    light.shadow.camera.bottom = -2; */
     //light.shadow.bias = 0.00001
 
     scene.add(light);
@@ -341,22 +300,25 @@ function onClick(event) {
 
 }
 
+const light2 = new THREE.AmbientLight( 0x404040 ); // soft white light
+scene.add( light2 );
+
 function addGui() {
     const gui = new GUI()
-    let parameters = {
-        resetCam: function () { resetCamera(); },
-        //  preset1: function () { preset01(); },
-        //  graphFunc: function () { createGraph(); },
-    };
+    gui.width = 300;
     /*const cubeFolder = gui.addFolder('Cube')
     cubeFolder.add(cube.rotation, 'x', 0, Math.PI * 2)
     cubeFolder.add(cube.rotation, 'y', 0, Math.PI * 2)
     cubeFolder.add(cube.rotation, 'z', 0, Math.PI * 2)
     cubeFolder.open()*/
+    gui.add(params, "message").name("");
+    gui.add(params, "radius").min(0).max(pi / 2).name("deform. param").onChange(updateSurface);
+    gui.add(params, "wireframe").name("Show mesh").onChange(updateSurface);
+    gui.add(params, "facets").name("Show smooth surface").onChange(updateSurface);
     const cameraFolder = gui.addFolder('Camera')
 
 
-    cameraFolder.add(parameters, 'resetCam').name("Reset Camera");
+    cameraFolder.add(params, 'resetCam').name("Reset Camera");
     // cameraFolder.add(camera.position, 'z', 0, 10)
     cameraFolder.open()/*  */
 }
@@ -424,6 +386,23 @@ function repere(p) {
 
 
 }
+
+function catenoid(r, t) {
+    var v = (r - .5) * 20;
+    var u = 2 * 5 * pi * t;
+    let a = params.radius;
+    let x = Math.cos(a) * sinh(v / 5) * Math.sin(u / 5) + Math.sin(a) * cosh(v / 5) * Math.cos(u / 5);
+    let y = -Math.cos(a) * sinh(v / 5) * Math.cos(u / 5) + Math.sin(a) * cosh(v / 5) * Math.sin(u / 5);
+    let z = u / 5 * Math.cos(a) + v / 5 * Math.sin(a);
+    return new THREE.Vector3(y / 3.3, z / 3.3, x / 3.3);
+}
+function sinh(t) {
+    return (Math.exp(t) - Math.exp(-t)) / 2.0;
+}
+function cosh(t) {
+    return (Math.exp(t) + Math.exp(-t)) / 2.0;
+}
+
 
 
 window.addEventListener('pointermove', onPointerMove);
