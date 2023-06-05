@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { ParametricGeometry } from 'three/examples/jsm/geometries/ParametricGeometry.js';
 import { GUI } from 'dat.gui'
+import flatpickr from "flatpickr";
+import { French } from "flatpickr/dist/l10n/fr.js"
 
 
 var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
@@ -10,6 +12,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x001b42);
 let camera
 let controls
+let modalAlreadyShowed = false
 
 
 
@@ -345,6 +348,7 @@ function addGui() {
     const gui = new GUI()
     let parameters = {
         resetCam: function () { resetCamera(); },
+        showPopup: function () { showPopup(); },
         //  preset1: function () { preset01(); },
         //  graphFunc: function () { createGraph(); },
     };
@@ -357,10 +361,21 @@ function addGui() {
 
 
     cameraFolder.add(parameters, 'resetCam').name("Reset Camera");
+    cameraFolder.add(parameters, 'showPopup').name("Add an event");
     // cameraFolder.add(camera.position, 'z', 0, 10)
     cameraFolder.open()/*  */
 }
 
+
+function showPopup(){
+    console.log("show")
+    if( ! modalAlreadyShowed ) {
+       // setTimeout( () => {
+          document.getElementById('modal').style.display = 'block'
+        //}, 500 )
+        modalAlreadyShowed = true
+      }
+}
 
 
 function resetCamera() {
@@ -426,6 +441,38 @@ function repere(p) {
 }
 
 
+
+
+window.addEventListener('scroll', function(e) {
+  if( ! modalAlreadyShowed ) {
+    setTimeout( () => {
+      document.getElementById('modal').style.display = 'block'
+    }, 2000 )
+    modalAlreadyShowed = true
+  }
+});
+
+
+document.getElementById('modal-close').addEventListener('click', function(e) {
+  document.getElementById('modal').style.display = 'none'
+  modalAlreadyShowed = false  
+})
+
+document.getElementById('modal-add').addEventListener('click', function(e) {
+    document.getElementById('modal').style.display = 'none'
+    modalAlreadyShowed = false
+    let event = {
+      date : document.getElementById("flatpicker").value,
+      title: document.getElementById("title").value,
+      content: document.getElementById("content").value,
+    }
+    console.log(event)
+     document.getElementById("title").value = ""
+    document.getElementById("content").value = ""
+    
+  })
+
+
 window.addEventListener('pointermove', onPointerMove);
 window.addEventListener('click', onClick);
 window.addEventListener('resize', onWindowResize, false);
@@ -436,5 +483,19 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 animate();
+
+// https://flatpickr.js.org/getting-started/
+flatpickr("#flatpicker", {
+    enableTime: true,
+    dateFormat: "d.m.Y H:i",
+    altInput: true,
+    defaultDate: "today",
+    time_24hr: true,
+    weekNumbers: true,
+    "locale": French 
+   // defaultDate: "now"
+});
+
+flatpickr.l10ns.default.firstDayOfWeek = 1;
 
 
