@@ -15,7 +15,6 @@
     "@types/dat.gui": "^0.7.10",
     "dat.gui": "^0.7.9",
     "three": "^0.153.0"
-   
   },
   "devDependencies": {
     "vite": "^4.3.9"
