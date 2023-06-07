@@ -5,6 +5,11 @@ import { GUI } from 'dat.gui'
 import flatpickr from "flatpickr";
 import { French } from "flatpickr/dist/l10n/fr.js"
 
+import { addCubes } from "/modules/cubes.js";
+import { addRepere } from "/modules/reperes.js";
+import { addLights } from "/modules/lights.js";
+
+
 
 var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
 
@@ -13,8 +18,6 @@ scene.background = new THREE.Color(0x001b42);
 let camera
 let controls
 let modalAlreadyShowed = false
-
-
 
 
 const renderer = new THREE.WebGLRenderer();
@@ -29,17 +32,10 @@ let current = null
 let start_repere
 let now_repere
 
-const cube_number = 1000
-const radius = 3
-const cube_per_spire = 50
-const spire_height = 0.2
+addCubes(scene)
 
-
-
-addCubes()
-
-addRepere()
-addLights()
+addRepere(scene)
+addLights(scene)
 addGui()
 
 let radius1 = Math.PI / 2
@@ -159,26 +155,6 @@ addHelicoid()
 addHelicoid2()
 addHyperbolicHelicoid()
 
-function addRepere() {
-    /*     const axesHelper = new THREE.AxesHelper(5);
-        scene.add(axesHelper); */
-
-
-    repere({ type: "seconde", start: 0, number: 60, step: 5, color: 0xffff00, z_offset: 0 })
-    repere({ type: "minute", start: 0, number: 60, step: 5, color: 0x00ffff, z_offset: 1 })
-    repere({ type: "heure", start: 0, number: 24, step: 3, color: 0x00ff00, z_offset: 2 })
-    repere({ type: "jour", start: 1, number: 7, step: 1, color: 0xffff00, z_offset: 3 })
-    repere({ type: "semaine", start: 0, number: 4, step: 1, color: 0x00ffff, z_offset: 4 })
-    repere({ type: "mois", start: 0, number: 12, step: 1, color: 0x00ff00, z_offset: 5 })
-
-    repere({ type: "annee", start: 0, number: 10, step: 1, color: 0xffff00, z_offset: 6 })
-    repere({ type: "decenie", start: 0, number: 10, step: 1, color: 0x00ffff, z_offset: 7 })
-    repere({ type: "siècle", start: 0, number: 10, step: 1, color: 0x00ff00, z_offset: 8 })
-    repere({ type: "millénaire", start: 0, number: 10, step: 1, color: 0xffff00, z_offset: 9 })
-
-
-
-
 
     // start of the animation
     const start_geometry = new THREE.BoxGeometry(.05, .05, .04);
@@ -197,61 +173,6 @@ function addRepere() {
     //now_repere.position.set(1, 1, 1)
     scene.add(now_repere)
 
-}
-
-function addCubes() {
-    for (let i = 0; i < cube_number; i++) {
-        const geometry = new THREE.BoxGeometry(.1, .1, .1);
-        /*    const cube_material = new THREE.MeshPhysicalMaterial(
-               {
-                   color: 0x049ef4,
-                   emissive: 0x00bb00,
-                   roughness: 1,
-                   metalness: 0,
-                   reflectivity: 0.5,
-                   clearcoat: 0,
-                   clearcoatNormalScale: 0,
-                   fog: true
-               }); */
-        const cube_material = new THREE.MeshPhysicalMaterial({
-            //color: 0xcc0000,
-            emissive: 0x26a269,
-            color: 0x00ff00, // decalage > 0 ? 0x00ff00 : 0x0000ff,
-            roughness: 0,
-            metalness: 0.5,
-            reflectivity: 0.5,
-            clearcoat: 1,
-            clearcoatRoughness: 0.4,
-            flatShading: true,
-            side: THREE.DoubleSide,
-            //fog: true,
-            //wireframe: true
-        });
-        const cube = new THREE.Mesh(geometry, cube_material);
-        cube.name = "cube_" + i // donner un nom unique
-        cube.userData.type = "cube" // créer un type perso pour les retrouver plus facilement
-        let angle = i * (Math.PI * 2 / cube_per_spire)
-        //  spirale basique
-        /*   let x = radius * Math.cos(angle)
-        let y = i * spire_height
-        let z = radius * Math.sin(angle) */
-
-        // test hyperbolic
-        // https://mathworld.wolfram.com/HyperbolicHelicoid.html
-        // https://github.com/scenaristeur/helyfe/blob/main/sketch.js
-        let tau = 5 //(torsion)
-        let u = i / 100
-        let v = angle
-        let denominateur = (1 + Math.cosh(u) * Math.cosh(v))
-        let x = radius * (Math.sinh(v) * Math.cos(tau * u)) / denominateur + 3 // decalage temporaire pour construire l'horloge
-        let y = radius * (Math.sinh(v) * Math.sin(tau * u)) / denominateur
-        let z = -radius * (Math.cosh(v) * Math.sinh(u)) / denominateur
-        cube.scale.set(2, 1 - i / cube_number, 2);
-        cube.position.set(x, y, z)
-        scene.add(cube);
-    }
-    console.log(scene)
-}
 
 camera.position.z = 5;
 //controls.update() must be called after any manual changes to the camera's transform
@@ -313,24 +234,7 @@ function animate(time) {
     renderer.render(scene, camera);
 }
 
-function addLights() {
-    scene.add(new THREE.AmbientLight(0xcccccc));
 
-    let light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.x = 1;
-    light.position.y = 0;
-    light.position.z = 1;
-    light.castShadow = true;
-    light.shadow.mapSize.width = 2048;
-    light.shadow.mapSize.height = 2048;
-    light.shadow.camera.right = 2;
-    light.shadow.camera.left = -2;
-    light.shadow.camera.top = 2;
-    light.shadow.camera.bottom = -2;
-    //light.shadow.bias = 0.00001
-
-    scene.add(light);
-}
 
 function onPointerMove(event) {
     // calculate pointer position in normalized device coordinates
@@ -411,35 +315,7 @@ function resetCamera() {
 
 }
 
-function repere(p) {
-    // let repere_scale = 3
 
-    for (let rep = p.start; rep < p.number; rep++) {
-        let geo = { x: 0.02, y: 0.01, z: 0.02 }
-        if (rep == p.start) {
-            geo = { x: 0.02, y: 0.5, z: 0.02 }
-        } else
-            if (rep % p.step == 0) {
-                geo = { x: 0.02, y: 0.1, z: 0.02 }
-            }
-        const rep_geometry = new THREE.BoxGeometry(geo.x, geo.y, geo.z);
-        const rep_material = new THREE.MeshBasicMaterial({ color: p.color });
-        const rep_mark = new THREE.Mesh(rep_geometry, rep_material);
-        // tour complet = 2pi -> 1 seconde = 2pi/60 = pi/30 -> + rotatiojn anti horaire d'un quart de tour ( + Pi /2)
-        let angle = rep * 2 * Math.PI / p.number - Math.PI / 2 //(2PI /60)
-        let x = Math.cos(angle)
-        let y = - Math.sin(angle)
-        let z = p.z_offset //0//Math.trunc(rep / p.number)
-        rep_mark.position.set(x, y, z)
-        rep_mark.userData.type = p.type
-        rep_mark.name = p.type + "_" + rep
-        scene.add(rep_mark);
-    }
-
-
-
-
-}
 
 
 
@@ -462,8 +338,10 @@ document.getElementById('modal-close').addEventListener('click', function(e) {
 document.getElementById('modal-add').addEventListener('click', function(e) {
     document.getElementById('modal').style.display = 'none'
     modalAlreadyShowed = false
+    let date = new Date(document.getElementById("flatpicker").value)
     let event = {
-      date : document.getElementById("flatpicker").value,
+      date : date,
+      timestamp: date.getTime()/1000,
       title: document.getElementById("title").value,
       content: document.getElementById("content").value,
     }
@@ -488,7 +366,7 @@ animate();
 // https://flatpickr.js.org/getting-started/
 flatpickr("#flatpicker", {
     enableTime: true,
-    dateFormat: "d.m.Y H:i",
+    dateFormat: "Y-m-d H:i",
     altInput: true,
     defaultDate: "today",
     time_24hr: true,
