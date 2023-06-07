@@ -6,17 +6,14 @@ import { Gui } from "/src/gui.js";
 import { Environnement } from "/src/environnement.js";
 import { NodeTool } from "./src/node_tool";
 
-
-
-
 let nodes = [];
 let params = {
-     N: 30,
-    progression :1, 
-    expansion_inverse: 1,
-    a:1000, // Ajuste cette valeur pour modifier la taille de l'hélicoïde
-    tau: 20// Ajuste cette valeur pour modifier la torsion de l'hélicoïde
-}
+  N: 360,
+  longueur: 2000, // a Ajuste cette valeur pour modifier la taille de l'hélicoïde
+  sens: -2.2, // expansion inverse
+  strates: 170, // tau Ajuste cette valeur pour modifier la torsion de l'hélicoïde
+  progression: -1.1,
+};
 
 let nt = new NodeTool(params);
 
@@ -24,7 +21,7 @@ for (let i = 0; i < params.N; i++) {
   // chatgpt proposition
   // var numberOfPoints = 100;
 
- let coords = nt.coords(i)
+  let coords = nt.coords(i);
   let node = {
     id: i,
     name: "ball" + i,
@@ -66,5 +63,5 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
     return nt.text(node);
   });
 
-let gui = new Gui(Graph, params);
+let gui = new Gui(Graph, params, nt);
 let environnement = new Environnement(Graph);
