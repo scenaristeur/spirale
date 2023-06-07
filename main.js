@@ -1,20 +1,63 @@
+// https://observablehq.com/d/b75bc06775254516
+
 import ForceGraph3D from "3d-force-graph";
 //import { Camera } from "./src/camera.js";
 import { Gui } from "/src/gui.js";
 import { Environnement } from "/src/environnement.js";
 import { NodeTool } from "./src/node_tool";
 
-let nt = new NodeTool();
-const N = 30;
+
+
+
+let nodes = [];
+let params = {
+     N: 30,
+    progression :1, 
+    expansion_inverse: 1,
+    a:1000, // Ajuste cette valeur pour modifier la taille de l'hélicoïde
+    tau: 20// Ajuste cette valeur pour modifier la torsion de l'hélicoïde
+}
+
+let nt = new NodeTool(params);
+
+for (let i = 0; i < params.N; i++) {
+  // chatgpt proposition
+  // var numberOfPoints = 100;
+
+ let coords = nt.coords(i)
+  let node = {
+    id: i,
+    name: "ball" + i,
+    color: "green",
+    fx: coords.x, //hyperbol_helicoid.x, //helix.x,//i,
+    fy: coords.y, //hyperbol_helicoid.y, //helix.y,//i,
+    fz: coords.z, //hyperbol_helicoid.z, //helix.z,//i, // fixed position
+    // rotation: {}
+  };
+  // node.rotation.y = rotation_y
+  nodes.push(node);
+}
+
 const gData = {
-  nodes: [...Array(N).keys()].map((i) => ({ id: i })),
-  links: [...Array(N).keys()]
+  nodes: nodes,
+  //links : []
+  links: [...Array(params.N).keys()]
     .filter((id) => id)
     .map((id) => ({
       source: id,
-      target: Math.round(Math.random() * (id - 1)),
+      target: id - 1, //Math.round(Math.random() * (id-1))
     })),
 };
+
+// const gData = {
+//   nodes: [...Array(N).keys()].map((i) => ({ id: i })),
+//   links: [...Array(N).keys()]
+//     .filter((id) => id)
+//     .map((id) => ({
+//       source: id,
+//       target: Math.round(Math.random() * (id - 1)),
+//     })),
+// };
 
 const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
   .backgroundColor("#001b42")
@@ -23,5 +66,5 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
     return nt.text(node);
   });
 
-let gui = new Gui(Graph);
+let gui = new Gui(Graph, params);
 let environnement = new Environnement(Graph);
