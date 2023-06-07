@@ -1,52 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Spear All</title>
+    <style>
+      	body {
+      		margin: 0;
+      	}
+      	.node-label {
+           font-size: 12px;
+           padding: 1px 4px;
+           border-radius: 4px;
+           background-color: rgba(230, 9, 9, 0.5);
+           user-select: none;
+         }
+      /* 	.heighter {
+      		height: 3000px;
+      	} */
 
-<head>
-	<meta charset="utf-8">
-	<title>Spear All</title>
-	<style>
-		body {
-			margin: 0;
-		}
+      	/* .modal {
+      		display: none;
+      	}
 
-	/* 	.heighter {
-			height: 3000px;
-		} */
+      	.modal-back {
+      		position: fixed;
+      		top: 0;
+      		left: 0;
+      		right: 0;
+      		bottom: 0;
+      		background: rgba(0, 0, 0, .25)
+      	}
 
-		/* .modal {
-			display: none;
-		}
+      	.modal-container {
+      		position: fixed;
+      		top: 50%;
+      		left: 50%;
+      		padding: 25px;
+      		background: white;
+      		transform: translate(-50%, -50%) */
+      	}
+    </style>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
+  </head>
 
-		.modal-back {
-			position: fixed;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background: rgba(0, 0, 0, .25)
-		}
-
-		.modal-container {
-			position: fixed;
-			top: 50%;
-			left: 50%;
-			padding: 25px;
-			background: white;
-			transform: translate(-50%, -50%) */
-		}
-	</style>
-	<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
-</head>
-
-<body>
-	<div id="3d-graph" />
-	<script type="module" src="/main.js"></script>
-	<!-- 	<script type="module" src="/etude/catenoid.js"></script>
+  <body>
+    <div id="3d-graph" />
+    <script type="module" src="/main.js"></script>
+    <!-- 	<script type="module" src="/etude/catenoid.js"></script>
  -->
 
-	<!-- <div class="heighter"></div> -->
+    <!-- <div class="heighter"></div> -->
 
-	<!-- <div class="modal" id="modal">
+    <!-- <div class="modal" id="modal">
 		<div class="modal-back"></div>
 		<div class="modal-container">
 			<h3> add an event</h3>
@@ -59,7 +64,5 @@
 			<button id="modal-close">Fermer</button>
 		</div>
 	</div> -->
-
-</body>
-
+  </body>
 </html>
