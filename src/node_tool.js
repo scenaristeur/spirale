@@ -8,10 +8,22 @@ export class NodeTool {
   }
 
   createEventBall(params = {}) {
+    // secondes en 1 an 60 x 60 x 24 x 365 = 31 536 000 secondes
+    let cent_ans = 3153600000; // represente l'integrale de la spirale en 300 noeuds
+
     params.id == undefined ? (params.id = uuidv4()) : "";
     params.timestamp == undefined ? (params.timestamp = Date.now()) : "";
-    console.log(params);
-    return params
+    // console.log(params);
+    params.relative_time = Math.floor(
+      (params.timestamp * 360) / cent_ans / 1000
+    );
+    // let { x, y, z } = this.coords(params.relative_time);
+    // params.x = x;
+    // params.y = y;
+    // params.z = z;
+    //  console.log(params);
+
+    return params;
   }
 
   nodeObject(node) {
@@ -25,9 +37,14 @@ export class NodeTool {
         break;
 
       default:
-        const geometry = new THREE.SphereGeometry(15, 32, 16);
-        const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-        nodeObject = new THREE.Mesh(geometry, material);
+        nodeObject = new SpriteText(node.id);
+        nodeObject.material.depthWrite = true; //false; // make sprite background transparent
+        nodeObject.color = "#ffff00";
+        nodeObject.textHeight = 8;
+        // const geometry = new THREE.SphereGeometry(15, 32, 16);
+        // const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        // nodeObject = new THREE.Mesh(geometry, material);
+
         break;
     }
     return nodeObject;
@@ -39,12 +56,12 @@ export class NodeTool {
     var v = (i / params.N) * Math.PI * 2 * params.sens; // Utilise une progression linéaire pour v
     let bottom = 1 + Math.cosh(v) * Math.cosh(u);
     var x =
-     10* (params.longueur * (Math.sinh(v) * Math.cos(params.strates * u))) /
+      (params.longueur * (Math.sinh(v) * Math.cos(params.strates * u))) /
       bottom;
-    var y = 10*
+    var y =
       (params.longueur * (Math.sinh(v) * Math.sin(params.strates * u))) /
       bottom;
-    var z = 10*(params.longueur * (Math.cosh(v) * Math.sinh(u))) / bottom;
+    var z = (params.longueur * (Math.cosh(v) * Math.sinh(u))) / bottom;
     return { x, y, z };
   }
 
@@ -88,16 +105,31 @@ export class NodeTool {
   }
 
   _updateNodes(graph) {
-    console.log(graph);
+    // console.log(graph);
+    let params = this.params;
+    //console.log(params);
     let { nodes, links } = graph.graphData();
     //console.log(nodes)
+    // nodes = nodes.filter((n) => n.group == "text_spirale");
     nodes.forEach((n) => {
-      let coords = this.coords(n.id);
-      n.x = coords.x;
-      n.y = coords.y;
-      n.z = coords.z;
+      //console.log(params)
+      if (n.group == "text_spirale") {
+        let coords = this.coords(n.id);
+        if (params.fixed == true) {
+          n.fx = coords.x;
+          n.fy = coords.y;
+          n.fz = coords.z;
+        } else {
+          n.x = coords.x;
+          n.y = coords.y;
+          n.z = coords.z;
+          delete n.fx;
+          delete n.fy;
+          delete n.fz;
+        }
+      }
     });
-
+//console.log(links)
     graph.graphData({ nodes, links });
   }
   /**

@@ -8,11 +8,12 @@ import { NodeTool } from "./src/node_tool";
 
 let nodes = [];
 let params = {
-  N: 360,
+  N: 361,
   longueur: 2000, // a Ajuste cette valeur pour modifier la taille de l'hélicoïde
   sens: -2.2, // expansion inverse
-  strates: 170, // tau Ajuste cette valeur pour modifier la torsion de l'hélicoïde
-  progression: -1.1,
+  strates: 99,//170, // tau Ajuste cette valeur pour modifier la torsion de l'hélicoïde
+  progression: -0.4,//-1.1,
+  fixed : true
 };
 
 let nt = new NodeTool(params);
@@ -27,9 +28,9 @@ for (let i = 0; i < params.N; i++) {
     name: "ball" + i,
     color: "green",
     group: "text_spirale",
-    x: coords.x, //hyperbol_helicoid.x, //helix.x,//i,
-    y: coords.y, //hyperbol_helicoid.y, //helix.y,//i,
-    z: coords.z, //hyperbol_helicoid.z, //helix.z,//i, // fixed position
+    fx: coords.x, //hyperbol_helicoid.x, //helix.x,//i,
+    fy: coords.y, //hyperbol_helicoid.y, //helix.y,//i,
+    fz: coords.z, //hyperbol_helicoid.z, //helix.z,//i, // fixed position
     // rotation: {}
   };
   // node.rotation.y = rotation_y
@@ -63,17 +64,22 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
   .nodeThreeObject((node) => {
     return nt.nodeObject(node);
   })
- 
+
   .onNodeClick((node, evt) => {
     console.log(node, evt);
   })
   .onNodeRightClick((node, evt) => {
     console.log(node, evt);
-  })
-  //.d3Force("center");
-  
-  // .d3Force("link")
-  // .distance(20)
+  });
+//.d3Force("center");
+
+// .d3Force("link")
+// .distance(20)
 
 let gui = new Gui(Graph, params, nt);
 let environnement = new Environnement(Graph);
+
+Graph.d3Force('center', null)
+//.d3Force('link', null)
+.d3Force('charge', null)
+

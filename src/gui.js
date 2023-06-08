@@ -50,13 +50,18 @@ export class Gui {
             console.log(json["@graph"]);
             let ressources = json["@graph"];
             ressources.forEach((r) => {
-              // console.log(r);
+              console.log(r);
               let id = r["@id"];
-              let modified = r["dct:modified"]["@value"];
-              let timestamp = new Date(r["dct:modified"]["@value"]).getTime();
-              //console.log(id, modified);
-              let ball = nt.createEventBall({ id, modified, timestamp });
-              addNode(ball, graph);
+              let modified = r["dct:modified"]["@value"]|| r["dct:modified"][0]["@value"] // can be array
+              console.log(modified)
+              if (modified != undefined) {
+                let timestamp = new Date(modified).getTime()
+                //console.log(id, modified);
+                let ball = nt.createEventBall({ id, modified, timestamp });
+                addNode(ball, graph);
+              } else {
+                console.warn("modified undefined", r);
+              }
             });
             // const objectURL = URL.createObjectURL(myBlob);
             // myImage.src = objectURL;
@@ -96,6 +101,7 @@ export class Gui {
         this.nt.updateNodes(this.graph);
       });
 
+    helicFolder.add(params, "fixed").name("Fixed");
     helicFolder.add(parameters, "reset").name("Reset");
     // add nodes
     gui.add(parameters, "addNow").name("Add an event now");
@@ -105,7 +111,7 @@ export class Gui {
   addNode(n, graph) {
     let { nodes, links } = graph.graphData();
     nodes.push(n);
-    let link = { source: n.id, target: 0 };
+    let link = { source: n.id, target: n.relative_time };
     links.push(link);
     graph.graphData({ nodes, links });
   }
