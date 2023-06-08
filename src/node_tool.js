@@ -1,33 +1,58 @@
 import SpriteText from "three-spritetext";
+import { v4 as uuidv4 } from "uuid";
+import * as THREE from "three";
 
 export class NodeTool {
   constructor(params) {
     this.params = params;
   }
-  text(node) {
-    const sprite = new SpriteText("THIS IS A NODE !" + node.id);
-    sprite.material.depthWrite = true; //false; // make sprite background transparent
-    sprite.color = node.color || "#ffffff";
-    sprite.textHeight = 8;
-    return sprite;
+
+  createEventBall(params = {}) {
+    params.id == undefined ? (params.id = uuidv4()) : "";
+    params.timestamp == undefined ? (params.timestamp = Date.now()) : "";
+    console.log(params);
+    return params
   }
+
+  nodeObject(node) {
+    let nodeObject;
+    switch (node.group) {
+      case "text_spirale":
+        nodeObject = new SpriteText("THIS IS A NODE !" + node.id);
+        nodeObject.material.depthWrite = true; //false; // make sprite background transparent
+        nodeObject.color = node.color || "#ffffff";
+        nodeObject.textHeight = 8;
+        break;
+
+      default:
+        const geometry = new THREE.SphereGeometry(15, 32, 16);
+        const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        nodeObject = new THREE.Mesh(geometry, material);
+        break;
+    }
+    return nodeObject;
+  }
+
   coords(i) {
     let params = this.params;
-    var u = (i / params.N) * Math.PI*2 * params.progression; // Utilise une progression circulaire pour u
-    var v = (i / params.N) *Math.PI*2*params.sens; // Utilise une progression linéaire pour v
+    var u = (i / params.N) * Math.PI * 2 * params.progression; // Utilise une progression circulaire pour u
+    var v = (i / params.N) * Math.PI * 2 * params.sens; // Utilise une progression linéaire pour v
     let bottom = 1 + Math.cosh(v) * Math.cosh(u);
-    var x = (params.longueur * (Math.sinh(v) * Math.cos(params.strates * u))) / bottom;
-    var y = (params.longueur * (Math.sinh(v) * Math.sin(params.strates * u))) / bottom;
-    var z = (params.longueur * (Math.cosh(v) * Math.sinh(u))) / bottom;
+    var x =
+     10* (params.longueur * (Math.sinh(v) * Math.cos(params.strates * u))) /
+      bottom;
+    var y = 10*
+      (params.longueur * (Math.sinh(v) * Math.sin(params.strates * u))) /
+      bottom;
+    var z = 10*(params.longueur * (Math.cosh(v) * Math.sinh(u))) / bottom;
     return { x, y, z };
   }
 
-  coords1(i){
-    let u = 360 *i
-    let v = 254*i
+  coords1(i) {
+    let u = 360 * i;
+    let v = 254 * i;
     let alpha = Math.PI * 2 * (u - 0.5); // transformer u en (u-0.5) double
     let theta = Math.PI * 2 * (v - 0.5); // multiplie le couches (v - 0.5); sympa : (v - 0.1);
-
 
     // hyperbola
     let bottom = 1 + Math.cosh(alpha) * Math.cosh(theta);
@@ -35,24 +60,24 @@ export class NodeTool {
     let x = (Math.sinh(theta) * Math.cos(5 * alpha)) / bottom;
     let z = (Math.sinh(theta) * Math.sin(5 * alpha)) / bottom;
     let y = (Math.cosh(theta) * Math.sinh(alpha)) / bottom;
-console.log(x,y,z)
+    console.log(x, y, z);
     return { x, y, z };
   }
 
-  resetNodes(graph){
+  resetNodes(graph) {
     this.params = {
-        N: 300,
-        progression: -1.1,
-        sens: -2.2,
-        longueur: 2000, // Ajuste cette valeur pour modifier la taille de l'hélicoïde
-        strates: 170, // Ajuste cette valeur pour modifier la torsion de l'hélicoïde
-      };
-    console.log("reset blocks",this.params)
-    this.updateNodes(graph)
+      N: 300,
+      progression: -1.1,
+      sens: -2.2,
+      longueur: 2000, // Ajuste cette valeur pour modifier la taille de l'hélicoïde
+      strates: 170, // Ajuste cette valeur pour modifier la torsion de l'hélicoïde
+    };
+    console.log("reset blocks", this.params);
+    this.updateNodes(graph);
   }
 
   updateNodes(graph) {
-    // ne semble pas fonctionner , est-ce ça qui plante ? 
+    // ne semble pas fonctionner , est-ce ça qui plante ?
     // http://www.kevinsubileau.fr/informatique/boite-a-code/php-html-css/javascript-debounce-throttle-reduire-appels-fonction.html
     let traiterEvenementThrottle = this.throttle(
       this._updateNodes(graph),
@@ -64,19 +89,16 @@ console.log(x,y,z)
 
   _updateNodes(graph) {
     console.log(graph);
-    let {nodes, links} = graph.graphData();
+    let { nodes, links } = graph.graphData();
     //console.log(nodes)
     nodes.forEach((n) => {
       let coords = this.coords(n.id);
-      n.fx = coords.x;
-      n.fy = coords.y;
-      n.fz = coords.z;
+      n.x = coords.x;
+      n.y = coords.y;
+      n.z = coords.z;
     });
 
-    graph.graphData({nodes, links})
-
-
-
+    graph.graphData({ nodes, links });
   }
   /**
    * Retourne une fonction qui, tant qu'elle est appelée,

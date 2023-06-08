@@ -26,9 +26,10 @@ for (let i = 0; i < params.N; i++) {
     id: i,
     name: "ball" + i,
     color: "green",
-    fx: coords.x, //hyperbol_helicoid.x, //helix.x,//i,
-    fy: coords.y, //hyperbol_helicoid.y, //helix.y,//i,
-    fz: coords.z, //hyperbol_helicoid.z, //helix.z,//i, // fixed position
+    group: "text_spirale",
+    x: coords.x, //hyperbol_helicoid.x, //helix.x,//i,
+    y: coords.y, //hyperbol_helicoid.y, //helix.y,//i,
+    z: coords.z, //hyperbol_helicoid.z, //helix.z,//i, // fixed position
     // rotation: {}
   };
   // node.rotation.y = rotation_y
@@ -60,8 +61,19 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
   .backgroundColor("#001b42")
   .graphData(gData)
   .nodeThreeObject((node) => {
-    return nt.text(node);
-  });
+    return nt.nodeObject(node);
+  })
+ 
+  .onNodeClick((node, evt) => {
+    console.log(node, evt);
+  })
+  .onNodeRightClick((node, evt) => {
+    console.log(node, evt);
+  })
+  //.d3Force("center");
+  
+  // .d3Force("link")
+  // .distance(20)
 
 let gui = new Gui(Graph, params, nt);
 let environnement = new Environnement(Graph);
