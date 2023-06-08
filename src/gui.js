@@ -92,9 +92,12 @@ export class Gui {
     let options = { url: "https://spoggy-test2.solidcommunity.net/public/" };
     //getData(url, null, nt, addNode, graph);
     this.fetchSolidData(options).then((jsonld) => {
+      
       console.log(jsonld);
-      this.processJsonld(jsonld);
+      this.processJsonld({jsonld: jsonld, url: options.url});
       // nodes.forEach(n => {addNode(n)})
+    }).catch(error => {
+      console.log(error.message); // 'An error has occurred: 404'
     });
   }
 
@@ -113,15 +116,20 @@ export class Gui {
         Accept: "application/ld+json",
       },
     });
+
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status}`;
+      throw new Error(message);
+    }
     const jsonld = await response.json();
     return jsonld;
   }
 
-  processJsonld(json) {
+  processJsonld(data) {
     let nt = this.nt;
     let addNode = this.addNode;
     let graph = this.graph
-    let ressources = json["@graph"];
+    let ressources = data.jsonld["@graph"];
     // ressources.forEach((r) =>
     for (let r of ressources) {
       console.log(r);
@@ -129,7 +137,7 @@ export class Gui {
       if (!id.startsWith("http") && id.endsWith(":")) {
         // @id is short remove the ":" and get from context
         id = id.slice(0, -1);
-        id = json["@context"][id];
+        id = data.jsonld["@context"][id];
       }
       let modified =
         r["dct:modified"]["@value"] || r["dct:modified"][0]["@value"]; // can be array
@@ -142,6 +150,9 @@ export class Gui {
         if (r["@type"].includes("ldp:BasicContainer")) {
           //  this.fetch()
           console.log("to fetch", id);
+          this.fetchSolidData({url: id, parent: data.url}).catch(error => {
+            console.log(error.message); // 'An error has occurred: 404'
+          });
           //callback(id, url, nt, callback, graph)
         }
       } else {
