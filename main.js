@@ -10,7 +10,7 @@ import { Animation } from "./src/animation";
 import { Helicoid } from "./src/helicoid";
 import { addRepere } from "/modules/reperes.js";
 import { addCubes } from "/modules/cubes.js";
-import { D3Spiral} from "/src/d3spiral.js"
+import { D3Spiral } from "/src/d3spiral.js";
 
 let nodes = [];
 let params = {
@@ -73,6 +73,8 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
 
   .onNodeClick((node, evt) => {
     console.log(node, evt);
+    // Graph.cameraPosition(node.x, node.y, node.z + 3);
+    // Graph.camera().lookAt(node.x, node.y, node.z);
   })
   .onNodeHover((node, evt) => {
     console.log(node, evt);
@@ -148,8 +150,8 @@ let HyperbolicHelicoid = new Helicoid({
 // });
 
 Graph.scene().add(helicoid1);
- Graph.scene().add(helicoid2);
+Graph.scene().add(helicoid2);
 Graph.scene().add(HyperbolicHelicoid);
 //Graph.scene().add(klein);
 
-let d3spiral = new D3Spiral(Graph, gui.gui)
+let d3spiral = new D3Spiral(Graph, gui.gui);

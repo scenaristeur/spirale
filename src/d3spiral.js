@@ -58,6 +58,28 @@ export class D3Spiral {
     // Add axis
      const axisEl = svg.append("g").classed("axis", true);
 
+
+//    https://d3-graph-gallery.com/graph/custom_axis.html
+     // Create the scale
+     // create svg element
+var svg2 = d3.select("#log_demo")
+.append("svg")
+.attr("width", outerR*4)
+.attr("height", outerR/8)
+//.attr("viewBox", `${-outerR} ${-outerR} ${outerR * 2} ${outerR * 2}`);
+
+
+var x = d3.scaleLog()
+.domain([1,1000])         // This is what is written on the Axis: from 0 to 100
+.range([100, 800])       // This is where the axis is placed: from 100 px to 800px
+.base(10)
+
+// Draw the axis
+svg2
+.append("g")
+.attr("transform", "translate(-95,0)")      // This controls the vertical position of the Axis
+.call(d3.axisBottom(x).tickFormat(d3.format(".2")))
+
      render();
 
     function render() {

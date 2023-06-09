@@ -12,6 +12,7 @@ export class Animation {
   }
 
   init() {
+    let graph = this.graph
     // function onPointerMove(event) {
     //   // calculate pointer position in normalized device coordinates
     //   // (-1 to +1) for both components
@@ -25,9 +26,9 @@ export class Animation {
     //   //  console.log(camera) // utile pour récupérer la position de la camera
     // }
     function onWindowResize() {
-      this.graph.camera().aspect = window.innerWidth / window.innerHeight;
-      this.graph.camera().updateProjectionMatrix();
-      this.graph.renderer().setSize(window.innerWidth, window.innerHeight);
+      graph.camera().aspect = window.innerWidth / window.innerHeight;
+      graph.camera().updateProjectionMatrix();
+      graph.renderer().setSize(window.innerWidth, window.innerHeight);
     }
     // window.addEventListener("pointermove", onPointerMove);
     // window.addEventListener("click", onClick);

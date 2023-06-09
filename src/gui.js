@@ -66,7 +66,7 @@ export class Gui {
     // add nodes
     gui.add(this, "addNow").name("Add an event now");
     gui.add(this, "addOneDay").name("Add an event passed 24 hours");
-    gui.add(this, "getSolid").name("Get Solid data");
+    gui.add(this, "getSolid").name("Get Solid Events");
   }
 
   resetCam() {
