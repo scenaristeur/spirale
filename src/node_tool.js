@@ -37,13 +37,13 @@ export class NodeTool {
         break;
 
       default:
-        nodeObject = new SpriteText(node.id);
-        nodeObject.material.depthWrite = true; //false; // make sprite background transparent
-        nodeObject.color = "#ffff00";
-        nodeObject.textHeight = 8;
-        // const geometry = new THREE.SphereGeometry(15, 32, 16);
-        // const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-        // nodeObject = new THREE.Mesh(geometry, material);
+        // nodeObject = new SpriteText(node.id);
+        // nodeObject.material.depthWrite = true; //false; // make sprite background transparent
+        // nodeObject.color = "#ffff00";
+        // nodeObject.textHeight = 8;
+        const geometry = new THREE.SphereGeometry(15, 32, 16);
+        const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        nodeObject = new THREE.Mesh(geometry, material);
 
         break;
     }

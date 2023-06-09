@@ -161,7 +161,12 @@ export class Gui {
         if (r["@type"].includes("ldp:BasicContainer")) {
           //  this.fetch()
           console.log("to fetch", id);
-          this.fetchSolidData({url: id, parent: data.url}).catch(error => {
+          this.fetchSolidData({url: id, parent: data.url}).then((jsonld) => {
+      
+            console.log(jsonld);
+            this.processJsonld({jsonld: jsonld, url: id});
+            // nodes.forEach(n => {addNode(n)})
+          }).catch(error => {
             console.log(error.message); // 'An error has occurred: 404'
           });
           //callback(id, url, nt, callback, graph)
