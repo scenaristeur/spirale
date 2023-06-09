@@ -2,18 +2,22 @@
 
 import ForceGraph3D from "3d-force-graph";
 //import { Camera } from "./src/camera.js";
-import { Gui } from "/src/gui.js";
-import { Environnement } from "/src/environnement.js";
+import { Gui } from "/src/gui";
+import { Environnement } from "/src/environnement";
 import { NodeTool } from "./src/node_tool";
+import { Animation } from "./src/animation";
+
+import { addRepere } from "/modules/reperes.js";
+import { addCubes } from "/modules/cubes.js";
 
 let nodes = [];
 let params = {
   N: 361,
   longueur: 2000, // a Ajuste cette valeur pour modifier la taille de l'hélicoïde
   sens: -2.2, // expansion inverse
-  strates: 99,//170, // tau Ajuste cette valeur pour modifier la torsion de l'hélicoïde
-  progression: -0.4,//-1.1,
-  fixed : true
+  strates: 99, //170, // tau Ajuste cette valeur pour modifier la torsion de l'hélicoïde
+  progression: -0.4, //-1.1,
+  fixed: true,
 };
 
 let nt = new NodeTool(params);
@@ -70,7 +74,8 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
   })
   .onNodeRightClick((node, evt) => {
     console.log(node, evt);
-  });
+  })
+ 
 //.d3Force("center");
 
 // .d3Force("link")
@@ -79,7 +84,23 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
 let gui = new Gui(Graph, params, nt);
 let environnement = new Environnement(Graph);
 
-Graph.d3Force('center', null)
-//.d3Force('link', null)
-.d3Force('charge', null)
+Graph.d3Force("center", null)
+  //.d3Force('link', null)
+  .d3Force("charge", null)
 
+addRepere(Graph.scene());
+addCubes(Graph.scene());
+
+let animation = new Animation(Graph)
+Graph.onEngineTick(() => {
+  animation.onEngineTick()
+}) 
+
+
+let isAnimationActive = true;
+document.getElementById('animationToggle').addEventListener('click', event => {
+  isAnimationActive ? Graph.pauseAnimation() : Graph.resumeAnimation();
+
+  isAnimationActive = !isAnimationActive;
+  event.target.innerHTML = `${(isAnimationActive ? 'Pause' : 'Resume')} Animation`;
+});

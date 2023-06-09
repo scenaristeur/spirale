@@ -3,7 +3,7 @@ import * as THREE from "three";
 export function addRepere(scene) {
   /*     const axesHelper = new THREE.AxesHelper(5);
         scene.add(axesHelper); */
-
+// reperess for secondes, minutes, hours... millenaires
   let reperes = [];
   reperes = reperes.concat(
     repere({
@@ -106,9 +106,30 @@ export function addRepere(scene) {
     })
   );
 
+  // start repere
+  // reperes = reperes.concat(
+  //   special_repere({ nom: "start", type:"start_repere", color: 0xff0000 })
+  // );
+  // nom repere
+  reperes = reperes.concat(
+    special_repere({ name: "now", type: "now_repere", color: 0x00ff00 })
+  );
   reperes = reperes.forEach((r) => {
     scene.add(r);
   });
+  console.log(scene);
+}
+
+function special_repere(r) {
+  let reperes = [];
+  const spe_geometry = new THREE.BoxGeometry(0.05, 0.05, 0.04);
+  const spe_material = new THREE.MeshBasicMaterial({color:r.color});
+  const spe_repere = new THREE.Mesh(spe_geometry, spe_material);
+  spe_repere.userData.type = r.type;
+  spe_repere.name = r.name;
+  reperes.push(spe_repere);
+  console.log(spe_repere)
+  return reperes;
 }
 
 function repere(p) {
