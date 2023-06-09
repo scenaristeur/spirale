@@ -7,6 +7,7 @@ import { Environnement } from "/src/environnement";
 import { NodeTool } from "./src/node_tool";
 import { Animation } from "./src/animation";
 
+import { Helicoid } from "./src/helicoid";
 import { addRepere } from "/modules/reperes.js";
 import { addCubes } from "/modules/cubes.js";
 
@@ -74,8 +75,8 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
   })
   .onNodeRightClick((node, evt) => {
     console.log(node, evt);
-  })
- 
+  });
+
 //.d3Force("center");
 
 // .d3Force("link")
@@ -86,21 +87,63 @@ let environnement = new Environnement(Graph);
 
 Graph.d3Force("center", null)
   //.d3Force('link', null)
-  .d3Force("charge", null)
+  .d3Force("charge", null);
 
 addRepere(Graph.scene());
 addCubes(Graph.scene());
 
-let animation = new Animation(Graph)
+let animation = new Animation(Graph);
 Graph.onEngineTick(() => {
-  animation.onEngineTick()
-}) 
-
+  animation.onEngineTick();
+});
 
 let isAnimationActive = true;
-document.getElementById('animationToggle').addEventListener('click', event => {
-  isAnimationActive ? Graph.pauseAnimation() : Graph.resumeAnimation();
+document
+  .getElementById("animationToggle")
+  .addEventListener("click", (event) => {
+    isAnimationActive ? Graph.pauseAnimation() : Graph.resumeAnimation();
 
-  isAnimationActive = !isAnimationActive;
-  event.target.innerHTML = `${(isAnimationActive ? 'Pause' : 'Resume')} Animation`;
+    isAnimationActive = !isAnimationActive;
+    event.target.innerHTML = `${
+      isAnimationActive ? "Pause" : "Resume"
+    } Animation`;
+  });
+
+let helicoid1 = new Helicoid({
+  type: "catenoid",
+  slices: 250,
+  stacks: 400,
+  x: -2,
+  y: -2,
+  z: 0,
 });
+let helicoid2 = new Helicoid({
+  type: "catenoid2",
+  slices: 25,
+  stacks: 400,
+  x: -2,
+  y: 2,
+  z: 0,
+});
+let HyperbolicHelicoid = new Helicoid({
+  type: "hyperbolic",
+  slices: 360,
+  stacks: 254,
+  x: -2,
+  y: 0,
+  z: 0,
+});
+
+// let klein = new Helicoid({
+//   type: "klein",
+//   slices: 25,
+//   stacks: 25,
+//   x: -1,
+//   y: -1,
+//   z: 0,
+// });
+
+Graph.scene().add(helicoid1);
+ Graph.scene().add(helicoid2);
+Graph.scene().add(HyperbolicHelicoid);
+//Graph.scene().add(klein);

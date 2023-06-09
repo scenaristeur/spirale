@@ -6,7 +6,7 @@ export class Animation {
   }
 
   onEngineTick() {
-    console.log("tick");
+    // console.log("tick");
     //let start = Math.trunc(time / 1000);
 
     //let val;
