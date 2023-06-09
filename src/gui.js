@@ -1,4 +1,7 @@
 import { GUI } from "dat.gui";
+// import * as THREE from 'three';
+// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
 
 export class Gui {
   constructor(graph, params, nt) {
@@ -67,12 +70,19 @@ export class Gui {
   }
 
   resetCam() {
+   // var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+   // var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 10000; //NEAR = 0.1, FAR = 20000;
+
+
+    //this.graph.camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+    console.log(this.graph.camera(), this.graph.controls())
     this.graph.cameraPosition({
       x: 0,
       y: 0,
       z: 1000,
       lookAt: { x: 0, y: 0, z: 0 },
     });
+    this.graph.camera().rotation.set(0,0,0)
     this.graph.camera().updateProjectionMatrix()
   }
 
