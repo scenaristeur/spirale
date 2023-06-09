@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { ParametricGeometry } from 'three/examples/jsm/geometries/ParametricGeometry.js';
 import { ParametricGeometries} from 'three/examples/jsm/geometries/ParametricGeometries.js';
 
-
+// https://codesandbox.io/s/41wxd
 
 export class Helicoid {
   constructor(options) {

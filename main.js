@@ -73,6 +73,9 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
   .onNodeClick((node, evt) => {
     console.log(node, evt);
   })
+  .onNodeHover((node, evt) => {
+    console.log(node, evt);
+  })
   .onNodeRightClick((node, evt) => {
     console.log(node, evt);
   });

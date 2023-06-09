@@ -1,8 +1,38 @@
 import * as THREE from "three";
+// no raycaster, use of onNodeHover, onNodeClick
+// const raycaster = new THREE.Raycaster();
+// const pointer = new THREE.Vector2();
+// let current = null;
 
 export class Animation {
   constructor(graph) {
     this.graph = graph;
+    this.onEngineTick();
+    this.init()
+  }
+
+  init() {
+    // function onPointerMove(event) {
+    //   // calculate pointer position in normalized device coordinates
+    //   // (-1 to +1) for both components
+    //   pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    //   pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    // }
+    // function onClick(event) {
+    //   current != null
+    //     ? console.log("object clicked", current.object.name, current.object)
+    //     : "";
+    //   //  console.log(camera) // utile pour récupérer la position de la camera
+    // }
+    function onWindowResize() {
+      this.graph.camera().aspect = window.innerWidth / window.innerHeight;
+      this.graph.camera().updateProjectionMatrix();
+      this.graph.renderer().setSize(window.innerWidth, window.innerHeight);
+    }
+    // window.addEventListener("pointermove", onPointerMove);
+    // window.addEventListener("click", onClick);
+    window.addEventListener("resize", onWindowResize, false);
+    //console.log(this.graph.scene().camera)
   }
 
   onEngineTick() {
@@ -10,9 +40,9 @@ export class Animation {
     //let start = Math.trunc(time / 1000);
 
     //let val;
+   // raycaster.setFromCamera(pointer, this.graph.camera());
 
     this.graph.scene().traverse((child) => {
-    
       switch (child.userData.type) {
         case "cube":
           child.rotation.x += 0.01;
@@ -39,6 +69,16 @@ export class Animation {
         default:
           break;
       }
+
+      // calculate objects intersecting the picking ray
+      // const intersects = raycaster.intersectObjects(scene.children);
+      // for (let i = 0; i < intersects.length; i++) {
+      //   intersects[i].object.userData.type == "cube"
+      //     ? intersects[i].object.material.color.set(0xff0000)
+      //     : "";
+      //   // console.log(intersects[i].object.name)
+      // }
+      // current = intersects[0] || null;
 
       /*      if (child.userData.type === "repere") {
                child.material.color.set(0xff0000)
