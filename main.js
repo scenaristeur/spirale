@@ -10,6 +10,7 @@ import { Animation } from "./src/animation";
 import { Helicoid } from "./src/helicoid";
 import { addRepere } from "/modules/reperes.js";
 import { addCubes } from "/modules/cubes.js";
+import { D3Spiral} from "/src/d3spiral.js"
 
 let nodes = [];
 let params = {
@@ -150,3 +151,5 @@ Graph.scene().add(helicoid1);
  Graph.scene().add(helicoid2);
 Graph.scene().add(HyperbolicHelicoid);
 //Graph.scene().add(klein);
+
+let d3spiral = new D3Spiral(Graph, gui.gui)
