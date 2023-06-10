@@ -9,6 +9,7 @@ export class NodeTool {
 
   addNode(n, graph) {
     let { nodes, links } = graph.graphData();
+    n.name == undefined ? n.name = n.id : ""
     nodes.push(n);
     let link = { source: n.id, target: n.relative_time, name: "modified" };
 

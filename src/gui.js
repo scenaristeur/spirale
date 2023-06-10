@@ -14,6 +14,9 @@ export class Gui {
   }
 
   init() {
+    let options = (this.options = {
+      url: "https://spoggy-test2.solidcommunity.net/public/",
+    });
     let gui = (this.gui = new GUI({
       /* autoPlace: false,*/ /*width: 400,*/ useLocalStorage: true,
     }));
@@ -66,6 +69,7 @@ export class Gui {
     // add nodes
     gui.add(this, "addNow").name("Add an event now");
     gui.add(this, "addOneDay").name("Add an event passed 24 hours");
+    gui.add(options, "url");
     gui.add(this, "getSolid").name("Get Solid Events");
   }
 
@@ -99,13 +103,8 @@ export class Gui {
     this.nt.addNode(ball, this.graph);
   }
   getSolid() {
-    let options = { url: "https://spoggy-test2.solidcommunity.net/public/" };
-    this.solid.getDataset(options, this.graph, this.nt);
+    this.solid.getDataset(this.options, this.graph, this.nt);
   }
-
- 
-
-
 
   // getData(url, parent = null, nt, callback, graph) {
   //   console.warn("fetch", url);
