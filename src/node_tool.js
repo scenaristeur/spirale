@@ -7,6 +7,19 @@ export class NodeTool {
     this.params = params;
   }
 
+  addNode(n, graph) {
+    let { nodes, links } = graph.graphData();
+    nodes.push(n);
+    let link = { source: n.id, target: n.relative_time, name: "modified" };
+
+    links.push(link);
+    if (n.parent != undefined) {
+      let parent_link = { source: n.parent, target: n.id, name: "contains"  };
+      links.push(parent_link);
+    }
+    graph.graphData({ nodes, links });
+  }
+
   createEventBall(params = {}) {
     // secondes en 1 an 60 x 60 x 24 x 365 = 31 536 000 secondes
     let cent_ans = 3153600000; // represente l'integrale de la spirale en 300 noeuds
@@ -42,7 +55,9 @@ export class NodeTool {
         // nodeObject.color = "#ffff00";
         // nodeObject.textHeight = 8;
         const geometry = new THREE.SphereGeometry(15, 32, 16);
-        const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const material = new THREE.MeshBasicMaterial({
+          color: node.color || 0xffff00,
+        });
         nodeObject = new THREE.Mesh(geometry, material);
 
         break;
@@ -129,7 +144,7 @@ export class NodeTool {
         }
       }
     });
-//console.log(links)
+    //console.log(links)
     graph.graphData({ nodes, links });
   }
   /**

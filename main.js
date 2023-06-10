@@ -5,6 +5,7 @@ import ForceGraph3D from "3d-force-graph";
 import { Gui } from "/src/gui";
 import { Environnement } from "/src/environnement";
 import { NodeTool } from "./src/node_tool";
+import { LinkTool } from "./src/link_tool";
 import { Animation } from "./src/animation";
 
 import { Helicoid } from "./src/helicoid";
@@ -23,6 +24,7 @@ let params = {
 };
 
 let nt = new NodeTool(params);
+let lt = new LinkTool(params);
 
 for (let i = 0; i < params.N; i++) {
   // chatgpt proposition
@@ -81,7 +83,21 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
   })
   .onNodeRightClick((node, evt) => {
     console.log(node, evt);
-  });
+  })
+  // .linkThreeObjectExtend(true)
+  // .linkThreeObject((link) => {
+  // return lt.linkObject(link)
+  // })
+  // .linkPositionUpdate((sprite, { start, end }) => {
+  //   const middlePos = Object.assign(
+  //     ...["x", "y", "z"].map((c) => ({
+  //       [c]: start[c] + (end[c] - start[c]) / 2, // calc middle point
+  //     }))
+  //   );
+
+  //   // Position sprite
+  //   Object.assign(sprite.position, middlePos);
+  // });
 
 //.d3Force("center");
 
@@ -92,8 +108,8 @@ let gui = new Gui(Graph, params, nt);
 let environnement = new Environnement(Graph);
 
 Graph.d3Force("center", null)
-  //.d3Force('link', null)
-  .d3Force("charge", null);
+//.d3Force('link', null)
+// .d3Force("charge", null)
 
 addRepere(Graph.scene());
 addCubes(Graph.scene());
