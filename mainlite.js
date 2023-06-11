@@ -77,9 +77,24 @@ const Graph = ForceGraph3D({
   .graphData(gData)
   .onNodeClick((node, evt) => {
     console.log(node, evt);
+    const distance = 40;
+    let pos = { x: distance, y: distance, z: distance };
+    if (node.x != 0 && node.y != 0 && node.z != 0) {
+      const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
+      pos = {
+        x: node.x * distRatio,
+        y: node.y * distRatio,
+        z: node.z * distRatio,
+      };
+    }
+    Graph.cameraPosition(
+      pos, // new position
+      node, // lookAt ({ x, y, z })
+      3000 // ms transition duration
+    );
     // Graph.cameraPosition(node.x, node.y, node.z + 3);
     // Graph.camera().lookAt(node.x, node.y, node.z);
-  })
+  });
 
 const table = [
   "H",
@@ -806,6 +821,7 @@ buttonGrid.addEventListener("click", function () {
 
 function transform(targets, duration) {
   TWEEN.removeAll();
+  reheat(2);
 
   for (let i = 0; i < objects.length; i++) {
     const object = objects[i];
@@ -830,19 +846,40 @@ function transform(targets, duration) {
       .start();
   }
 
+  let { nodes, links } = Graph.graphData();
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i];
+    const target = targets[i];
+    //console.log(object, target);
+    console.log(node);
+    new TWEEN.Tween(node)
+      .to(
+        {
+          x: target.position.x,
+          y: target.position.y,
+          z: target.position.z,
+          fx: target.position.x,
+          fy: target.position.y,
+          fz: target.position.z,
+        },
+        Math.random() * duration + duration
+      )
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .start();
+  }
+
   new TWEEN.Tween(this)
     .to({}, duration * 2)
-    .onUpdate( reheat )
+    // .onUpdate( reheat(1) )
     .start();
-
-
 }
 
-function reheat(){
-      // reheat simulation so onEngineTick keeps running
-  // as we don't need the force engine at this stage, remove forces
+function reheat(i) {
+  // reheat simulation so onEngineTick keeps running
+  // as we don't need the force engine at this stage, remove forces*
+  console.log("reheat", i);
   Graph.d3ReheatSimulation()
-  .d3Force("link", null)
-  .d3Force("charge", null)
-  .d3Force("center", null);
+    .d3Force("link", null)
+    .d3Force("charge", null)
+    .d3Force("center", null);
 }
