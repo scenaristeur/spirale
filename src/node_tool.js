@@ -22,14 +22,15 @@ export class NodeTool {
   }
 
   createEventBall(params = {}) {
-    // secondes en 1 an 60 x 60 x 24 x 365 = 31 536 000 secondes
-    let cent_ans = 3153600000; // represente l'integrale de la spirale en 300 noeuds
+    // secondes en 1 an 60 x 60 x 24 x 365 = 31 536 000 secondes // 315360000 = 10 ans
+   // let cent_ans = 3153600000; // represente l'integrale de la spirale en 300 noeuds
+    let dix_ans = 3153600000;
 
     params.id == undefined ? (params.id = uuidv4()) : "";
     params.timestamp == undefined ? (params.timestamp = Date.now()) : "";
     // console.log(params);
     params.relative_time = Math.floor(
-      (params.timestamp * 360) / cent_ans / 1000
+      (params.timestamp * 360) / dix_ans / 1000 / 2 // div par 2 pour 5 ans
     );
     // let { x, y, z } = this.coords(params.relative_time);
     // params.x = x;

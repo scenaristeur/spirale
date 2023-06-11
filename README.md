@@ -589,7 +589,8 @@ ceci te rajoute une nouvelle commande qui permet la publication, elle s'utilise 
 
 
 
-
+# last experimentations
+- run `~/dev/spirale$ npx http-serve` and open `http://127.0.0.1:8080/helyfe.html`
 
 
 

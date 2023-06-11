@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Helyfe</title>
+	
+	<style>
+		 	body {
+      		margin: 0;
+      	}
+		a {
+			color: #8ff;
+		}
+
+		#menu {
+			position: absolute;
+			bottom: 20px;
+			width: 100%;
+			text-align: center;
+		}
+
+		.element {
+			width: 120px;
+			height: 160px;
+			box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
+			border: 1px solid rgba(127,255,255,0.25);
+			font-family: Helvetica, sans-serif;
+			text-align: center;
+			line-height: normal;
+			cursor: default;
+		}
+
+		.element:hover {
+			box-shadow: 0px 0px 12px rgba(0,255,255,0.75);
+			border: 1px solid rgba(127,255,255,0.75);
+		}
+
+			.element .number {
+				position: absolute;
+				top: 20px;
+				right: 20px;
+				font-size: 12px;
+				color: rgba(127,255,255,0.75);
+			}
+
+			.element .symbol {
+				position: absolute;
+				top: 40px;
+				left: 0px;
+				right: 0px;
+				font-size: 60px;
+				font-weight: bold;
+				color: rgba(255,255,255,0.75);
+				text-shadow: 0 0 10px rgba(0,255,255,0.95);
+			}
+
+			.element .details {
+				position: absolute;
+				bottom: 15px;
+				left: 0px;
+				right: 0px;
+				font-size: 12px;
+				color: rgba(127,255,255,0.75);
+			}
+
+		button {
+			color: rgba(127,255,255,0.75);
+			background: transparent;
+			outline: 1px solid rgba(127,255,255,0.75);
+			border: 0px;
+			padding: 5px 10px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: rgba(0,255,255,0.5);
+		}
+
+		button:active {
+			color: #000000;
+			background-color: rgba(0,255,255,0.75);
+		}
+	</style>
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
+  </head>
+
+  <body>
+    <div id="3d-graph" >
+		
+		Loading ...</div>
+
+		<div style="position: absolute; top: 5px; left: 5px;">
+			<button id="animationToggle" style="margin: 8px; height: 25px; width: 150px;">
+			  Pause Animation
+			</button>
+			<!-- <button id="rotationToggle" style="margin: 8px; height: 25px; width: 150px;">
+			  Pause Rotation
+			</button> -->
+		  </div>
+
+		  <!-- <div id="d3_radial" 
+		  style="position: absolute; 
+		  top: 40px; 
+		  left: 5px;
+		  background-color: white"
+		   ></div> -->
+		   <!-- <svg id="canvas"  style="position: absolute; 
+		   top: 40px; 
+		   left: 5px;
+		   background-color: white"></svg>
+		   <div id="log_demo"  style="position: absolute; 
+		   bottom: 0px; 
+		   left: 0px;
+		   width:100%;
+		   background-color: white;
+		   z-index: 4;"></div> -->
+		   <div id="menu">
+			<button id="table">TABLE</button>
+			<button id="sphere">SPHERE</button>
+			<button id="helix">HELIX</button>
+			<button id="grid">GRID</button>
+		</div>
+
+    <script type="module" src="/mainlite.js"></script>
+    <!-- 	<script type="module" src="/etude/catenoid.js"></script>
+ -->
+
+    <!-- <div class="heighter"></div> -->
+
+    <!-- <div class="modal" id="modal">
+		<div class="modal-back"></div>
+		<div class="modal-container">
+			<h3> add an event</h3>
+			<input id="flatpicker" ><br>
+			<input id="title" placeholder="title"><br>
+			</textarea><textarea name="" id="content" cols="30" rows="10"></textarea>
+<br>
+<br>
+			<button id="modal-add">Ajouter</button>
+			<button id="modal-close">Fermer</button>
+		</div>
+	</div> -->
+  </body>
+</html>
