@@ -9,26 +9,30 @@ export class EventManager {
     console.log(options);
     let events = [];
 
-    let eventsNumber = 10;
+    let eventsNumber = 100;
 
     for (let i = 0; i < eventsNumber; i++) {
+      let nb_jours = i + Math.floor(Math.random() * 360 - i);
+      console.log("nb_jours", nb_jours);
+      let timestamp = 1000 * 60 * 60 * 24 * nb_jours; // nombre de millisecondes par jour *  un jour au hasard dans l'année
+      let start = Date.now() + timestamp;
 
-
-      let timestamp = 1000 * 60 * 60 * 24 * i; // nombre de millisecondes par jour
-
-      let start = new Date(Date.now() + timestamp).toLocaleDateString();
-
+      // let duration = Math.floor(Math.random() * 10)
+      // let end_timestamp = 1000 * 60 * 60 * 24 * (duration)
+      //let duration = Math.floor(Math.random() *1000 * 60 * 60 * 24 ) //random 10 jours
+      let end = null; //Date.now() + end_timestamp; //null//start+duration
 
       let event = {
         id: uuidv4(),
-        name: "Nom_" + i,
+        name: "Nom_" + i + " on " + new Date(start).toLocaleDateString(),
         // date_unique: Date.now() + i * 100000,
         // date_debut: "",
         // date_fin: "",
         // heure_debut: i+":30",
         // heure_fin: i+2+":45",
-        start: start ,
-        end: null,
+        start: start,
+        end: end,
+        // duration: duration,
         place: "place du " + i,
         images: [
           "https://www.lyon.fr/sites/lyonfr/files/content/2023-06/poussineau_festisound_p.jpg",

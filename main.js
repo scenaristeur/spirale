@@ -19,7 +19,7 @@ let params = {
   longueur: 2000, // a Ajuste cette valeur pour modifier la taille de l'hélicoïde
   sens: -2.2, // expansion inverse
   strates: 99, //170, // tau Ajuste cette valeur pour modifier la torsion de l'hélicoïde
-  progression: -0.4, //-1.1,
+  progression: -0.4, //-1.1, 3.3 sympa spiral start
   fixed: true,
 };
 
@@ -31,7 +31,12 @@ for (let i = 0; i < params.N; i++) {
   // var numberOfPoints = 100;
   let timestamp = 1000 * 60 * 60 * 24 * i; // nombre de millisecondes par jour
 
-  let name = new Date(Date.now() + timestamp).toLocaleDateString();
+  let date = new Date(Date.now() + timestamp);
+
+  date = date.setHours(0, 0, 0, 0);
+  //console.log(date)
+  //date.setUTCHours(0, 0, 0, 0);
+  let name = new Date(date).toLocaleDateString();
 
   let coords = nt.coords(i);
   let node = {
@@ -39,6 +44,8 @@ for (let i = 0; i < params.N; i++) {
     name: name,
     color: "green",
     group: "text_spirale",
+    timestamp: timestamp,
+    date: date,
     fx: coords.x, //hyperbol_helicoid.x, //helix.x,//i,
     fy: coords.y, //hyperbol_helicoid.y, //helix.y,//i,
     fz: coords.z, //hyperbol_helicoid.z, //helix.z,//i, // fixed position
@@ -86,6 +93,9 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
   })
   .onNodeRightClick((node, evt) => {
     console.log(node, evt);
+  })
+  .linkColor((l) => {
+    return l.color;
   });
 // .linkThreeObjectExtend(true)
 // .linkThreeObject((link) => {

@@ -53,14 +53,14 @@ export class Gui {
         this.nt.updateNodes(this.graph);
       });
     helicFolder
-      .add(this.params, "strates", 0, 240, 1, 170)
+      .add(this.params, "strates", 0, 240, 1, 144)
       .name("strates")
       .onChange((p) => {
         this.nt.updateNodes(this.graph);
       });
 
     helicFolder
-      .add(this.params, "progression", -2 * Math.PI, 2 * Math.PI, 0.1, -1.1)
+      .add(this.params, "progression", -2 * Math.PI, 2 * Math.PI, 0.1, -0.3)
       .name("Progression")
       .onChange((p) => {
         this.nt.updateNodes(this.graph);

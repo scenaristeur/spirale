@@ -26,10 +26,17 @@ export class NodeTool {
     console.log(n);
     let { nodes, links } = graph.graphData();
     nodes.push(n);
+
+    let start_day = new Date(n.start).setHours(0, 0, 0, 0);
+    console.log("start_day", start_day);
+    let start_day_node = nodes.find((n) => n.date == start_day);
+    console.log("found day node", start_day_node);
+
     let link_start = {
       source: n.id,
-      target: n.start,
+      target: start_day_node.id,
       name: "start",
+      color: "#00ff00",
     };
     console.log("link _start", link_start);
     links.push(link_start);
@@ -39,9 +46,27 @@ export class NodeTool {
         source: n.id,
         target: n.end,
         name: "end",
+        color: "#ff0000",
       };
       console.log("link_end", link_end);
       links.push(link_end);
+    } else {
+      if (Date.now() % 3 == 0) {
+        // ajout d'un end pour 1/3
+        console.log(" //HACK random end to test");
+        let duration = Math.floor(Math.random() * 10) + 1;
+        console.log("duration", duration);
+        let end_day_id = link_start.target + duration;
+        if (end_day_id > 360) end_day_id = 360;
+        let link_end = {
+          source: n.id,
+          target: end_day_id,
+          name: "end",
+          color: "#ff0000",
+        };
+        console.log("link_end", link_end);
+        links.push(link_end);
+      }
     }
 
     graph.graphData({ nodes, links });
@@ -61,7 +86,6 @@ export class NodeTool {
     // // params.z = z;
     // //  console.log(params);
   }
- 
 
   createEventBall(params = {}) {
     // secondes en 1 an 60 x 60 x 24 x 365 = 31 536 000 secondes // 315360000 = 10 ans
