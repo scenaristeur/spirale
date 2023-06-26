@@ -32,6 +32,7 @@ export class EventManager {
         // heure_fin: i+2+":45",
         start: start,
         end: end,
+        color: "#00ff00",
         // duration: duration,
         place: "place du " + i,
         images: [
