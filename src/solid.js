@@ -1,9 +1,10 @@
 export class Solid {
   constructor() {
     this.resources = {};
+    this.recursive_loops = 20;
   }
   getDataset(options, graph, nt) {
-  
+    this.recursive = this.recursive_loops;
     this.graph = graph;
     this.nt = nt;
     //getData(url, null, nt, addNode, graph);
@@ -53,9 +54,17 @@ export class Solid {
       if (modified != undefined) {
         let timestamp = new Date(modified).getTime();
         console.log(id, modified);
-        let node_params = { id, modified, timestamp, color: "#ff0000", parent: data.url }
-        if (r["@type"].includes("ldp:BasicContainer")) {
-           node_params.color = "#ffff00"
+        let node_params = {
+          id,
+          modified,
+          timestamp,
+          color: "#ff0000",
+          parent: data.url,
+        };
+        if (this.recursive > 0 && r["@type"].includes("ldp:BasicContainer")) {
+          this.recursive--;
+          console.log("recursive loops", this.recursive);
+          node_params.color = "#ffff00";
           //  this.fetch()
           console.log("to fetch", id);
           if (this.resources[id] == undefined) {
@@ -70,7 +79,7 @@ export class Solid {
               });
             //callback(id, url, nt, callback, graph)
           } else {
-            console.log("already visited",id);
+            console.log("already visited", id);
           }
         }
         let ball = nt.createEventBall(node_params);
