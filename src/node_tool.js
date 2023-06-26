@@ -1,6 +1,7 @@
 import SpriteText from "three-spritetext";
 import { v4 as uuidv4 } from "uuid";
 import * as THREE from "three";
+import { timeMonths } from "d3";
 
 export class NodeTool {
   constructor(params) {
@@ -9,21 +10,67 @@ export class NodeTool {
 
   addNode(n, graph) {
     let { nodes, links } = graph.graphData();
-    n.name == undefined ? n.name = n.id : ""
+    n.name == undefined ? (n.name = n.id) : "";
     nodes.push(n);
     let link = { source: n.id, target: n.relative_time, name: "modified" };
 
     links.push(link);
     if (n.parent != undefined) {
-      let parent_link = { source: n.parent, target: n.id, name: "contains"  };
+      let parent_link = { source: n.parent, target: n.id, name: "contains" };
       links.push(parent_link);
     }
     graph.graphData({ nodes, links });
   }
 
+  addEventNode(n, graph) {
+    console.log(n);
+    let { nodes, links } = graph.graphData();
+    nodes.push(n);
+    let link_start = {
+      source: n.id,
+      target: this.relativeTime(n.start),
+      name: "start",
+    };
+    console.log("link _start", link_start);
+    links.push(link_start);
+
+    if (n.end != undefined) {
+      let link_end = {
+        source: n.id,
+        target: this.relativeTime(n.end),
+        name: "end",
+      };
+      console.log("link_end", link_end);
+      links.push(link_end);
+    }
+
+    graph.graphData({ nodes, links });
+    // secondes en 1 an 60 x 60 x 24 x 365 = 31 536 000 secondes // 315360000 = 10 ans
+    // let cent_ans = 3153600000; // represente l'integrale de la spirale en 300 noeuds
+    // let dix_ans = 3153600000;
+
+    // params.id == undefined ? (params.id = uuidv4()) : "";
+    // params.timestamp == undefined ? (params.timestamp = Date.now()) : "";
+    // // console.log(params);
+    // params.relative_time = Math.floor(
+    //   (params.timestamp * 360) / dix_ans / 1000 / 2 // div par 2 pour 5 ans
+    // );
+    // // let { x, y, z } = this.coords(params.relative_time);
+    // // params.x = x;
+    // // params.y = y;
+    // // params.z = z;
+    // //  console.log(params);
+  }
+  relativeTime(t) {
+    let dix_ans = 3153600000;
+    return Math.floor(
+      (t * 360) / dix_ans / 1000 / 2 // div par 2 pour 5 ans
+    );
+  }
+
   createEventBall(params = {}) {
     // secondes en 1 an 60 x 60 x 24 x 365 = 31 536 000 secondes // 315360000 = 10 ans
-   // let cent_ans = 3153600000; // represente l'integrale de la spirale en 300 noeuds
+    // let cent_ans = 3153600000; // represente l'integrale de la spirale en 300 noeuds
     let dix_ans = 3153600000;
 
     params.id == undefined ? (params.id = uuidv4()) : "";

@@ -2,6 +2,7 @@ import { GUI } from "dat.gui";
 // import * as THREE from 'three';
 // import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Solid } from "./solid";
+import { EventManager } from "./eventManager";
 
 export class Gui {
   constructor(graph, params, nt) {
@@ -10,6 +11,7 @@ export class Gui {
     this.nt = nt;
     console.log(this.graph);
     this.solid = new Solid();
+    this.eventManager = new EventManager();
     this.init();
   }
 
@@ -71,6 +73,7 @@ export class Gui {
     gui.add(this, "addOneDay").name("Add an event passed 24 hours");
     gui.add(options, "url");
     gui.add(this, "getSolid").name("Get Solid Events");
+    gui.add(this, "getEvents").name("Get Events");
   }
 
   resetCam() {
@@ -104,6 +107,15 @@ export class Gui {
   }
   getSolid() {
     this.solid.getDataset(this.options, this.graph, this.nt);
+  }
+  async getEvents() {
+    let options = {};
+    let events = await this.eventManager.getEvents(options);
+    console.log("events", events);
+    events.forEach((event) => {
+      //let ball = this.nt.createEventBall(event); // negative for futur
+      this.nt.addEventNode(event, this.graph);
+    });
   }
 
   // getData(url, parent = null, nt, callback, graph) {
