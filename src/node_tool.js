@@ -28,16 +28,16 @@ export class NodeTool {
     nodes.push(n);
     let link_start = {
       source: n.id,
-      target: this.relativeTime(n.start),
+      target: n.start,
       name: "start",
     };
     console.log("link _start", link_start);
     links.push(link_start);
 
-    if (n.end != undefined) {
+    if (n.end != null) {
       let link_end = {
         source: n.id,
-        target: this.relativeTime(n.end),
+        target: n.end,
         name: "end",
       };
       console.log("link_end", link_end);
@@ -61,12 +61,7 @@ export class NodeTool {
     // // params.z = z;
     // //  console.log(params);
   }
-  relativeTime(t) {
-    let dix_ans = 3153600000;
-    return Math.floor(
-      (t * 360) / dix_ans / 1000 / 2 // div par 2 pour 5 ans
-    );
-  }
+ 
 
   createEventBall(params = {}) {
     // secondes en 1 an 60 x 60 x 24 x 365 = 31 536 000 secondes // 315360000 = 10 ans
@@ -92,7 +87,7 @@ export class NodeTool {
     let nodeObject;
     switch (node.group) {
       case "text_spirale":
-        nodeObject = new SpriteText("THIS IS A NODE !" + node.id);
+        nodeObject = new SpriteText(node.name);
         nodeObject.material.depthWrite = true; //false; // make sprite background transparent
         nodeObject.color = node.color || "#ffffff";
         nodeObject.textHeight = 8;

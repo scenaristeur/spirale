@@ -12,6 +12,13 @@ export class EventManager {
     let eventsNumber = 10;
 
     for (let i = 0; i < eventsNumber; i++) {
+
+
+      let timestamp = 1000 * 60 * 60 * 24 * i; // nombre de millisecondes par jour
+
+      let start = new Date(Date.now() + timestamp).toLocaleDateString();
+
+
       let event = {
         id: uuidv4(),
         name: "Nom_" + i,
@@ -20,8 +27,8 @@ export class EventManager {
         // date_fin: "",
         // heure_debut: i+":30",
         // heure_fin: i+2+":45",
-        start: Date.now() / 1000 + i * 1000000,
-        end: Date.now() / 1000 + i * 2000000,
+        start: start ,
+        end: null,
         place: "place du " + i,
         images: [
           "https://www.lyon.fr/sites/lyonfr/files/content/2023-06/poussineau_festisound_p.jpg",

@@ -26,15 +26,17 @@ let params = {
 let nt = new NodeTool(params);
 // let lt = new LinkTool(params);
 
-
 for (let i = 0; i < params.N; i++) {
   // chatgpt proposition
   // var numberOfPoints = 100;
+  let timestamp = 1000 * 60 * 60 * 24 * i; // nombre de millisecondes par jour
+
+  let name = new Date(Date.now() + timestamp).toLocaleDateString();
 
   let coords = nt.coords(i);
   let node = {
     id: i,
-    name: "ball" + i,
+    name: name,
     color: "green",
     group: "text_spirale",
     fx: coords.x, //hyperbol_helicoid.x, //helix.x,//i,
@@ -84,21 +86,21 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
   })
   .onNodeRightClick((node, evt) => {
     console.log(node, evt);
-  })
-  // .linkThreeObjectExtend(true)
-  // .linkThreeObject((link) => {
-  // return lt.linkObject(link)
-  // })
-  // .linkPositionUpdate((sprite, { start, end }) => {
-  //   const middlePos = Object.assign(
-  //     ...["x", "y", "z"].map((c) => ({
-  //       [c]: start[c] + (end[c] - start[c]) / 2, // calc middle point
-  //     }))
-  //   );
+  });
+// .linkThreeObjectExtend(true)
+// .linkThreeObject((link) => {
+// return lt.linkObject(link)
+// })
+// .linkPositionUpdate((sprite, { start, end }) => {
+//   const middlePos = Object.assign(
+//     ...["x", "y", "z"].map((c) => ({
+//       [c]: start[c] + (end[c] - start[c]) / 2, // calc middle point
+//     }))
+//   );
 
-  //   // Position sprite
-  //   Object.assign(sprite.position, middlePos);
-  // });
+//   // Position sprite
+//   Object.assign(sprite.position, middlePos);
+// });
 
 //.d3Force("center");
 
@@ -108,7 +110,7 @@ const Graph = ForceGraph3D()(document.getElementById("3d-graph"))
 let gui = new Gui(Graph, params, nt);
 let environnement = new Environnement(Graph);
 
-Graph.d3Force("center", null)
+Graph.d3Force("center", null);
 //.d3Force('link', null)
 // .d3Force("charge", null)
 
